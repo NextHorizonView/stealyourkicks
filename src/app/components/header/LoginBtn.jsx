@@ -5,7 +5,7 @@ import Link from "next/link";
 import React from "react";
 
 export default function LoginBtn() {
-  const { user, isLoading, error, handleSignInWithGoogle, handleLogout } =
+  const { user, isLoading, handleSignInWithGoogle, handleLogout } =
     useAuth();
   if (isLoading) {
     return <h1>Loading..</h1>;
