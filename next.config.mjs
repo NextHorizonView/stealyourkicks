@@ -1,4 +1,14 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    // Other Next.js configurations (if any)
+
+    images: {
+        domains: [
+            "images.unsplash.com",
+            "encrypted-tbn1.gstatic.com",
+            "image.goat.com"
+        ],
+    },
+};
 
 export default nextConfig;

@@ -50,7 +50,7 @@ const Navbar = () => {
                     </div>
 
                     {/* Icons Section */}
-                    <div className="flex items-center space-x-7 relative">
+                    <div className="flex items-center space-x-7 ml-8 relative">
                         {/* Profile Icon */}
                         <button onClick={toggleProfileMenu} className="text-black hover:text-indigo-500 transition duration-300 ease-in-out">
                             <CgProfile className="h-8 w-8" />

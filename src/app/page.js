@@ -1,4 +1,6 @@
 
+import { HomePageCards } from "./components/cards/HomePageCards";
+import Footer from "./components/footer/footer";
 import LoginBtn from "./components/header/LoginBtn";
 
 import Navbar from "./components/header/Navbar";
@@ -10,6 +12,8 @@ export default function Home() {
     <div>
       <Navbar/>
       <HeroSection/>
+      <HomePageCards/>
+      <Footer/>
     </div>
     </>
     

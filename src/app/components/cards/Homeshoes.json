@@ -1,0 +1,39 @@
+
+[
+    {
+        "id": 1,
+        "name": "Nike Air Max 270",
+        "image": "https://image.goat.com/375/attachments/product_template_pictures/images/011/119/994/original/218099_00.png.png",
+        "price": "$150"
+    },
+    {
+        "id": 2,
+        "name": "Adidas Ultraboost",
+        "image": "https://image.goat.com/375/attachments/product_template_pictures/images/011/119/994/original/218099_00.png.png",
+        "price": "$180"
+    },
+    {
+        "id": 3,
+        "name": "Puma RS-X",
+        "image": "https://image.goat.com/375/attachments/product_template_pictures/images/011/119/994/original/218099_00.png.png",
+        "price": "$120"
+    },
+    {
+        "id": 4,
+        "name": "New Balance 990",
+        "image": "https://image.goat.com/375/attachments/product_template_pictures/images/011/119/994/original/218099_00.png.png",
+        "price": "$160"
+    },
+    {
+        "id": 5,
+        "name": "Reebok Classic",
+        "image": "https://image.goat.com/375/attachments/product_template_pictures/images/011/119/994/original/218099_00.png.png",
+        "price": "$100"
+    },
+    {
+        "id": 6,
+        "name": "Asics Gel-Lyte",
+        "image": "https://image.goat.com/375/attachments/product_template_pictures/images/011/119/994/original/218099_00.png.png",
+        "price": "$130"
+    }
+]
