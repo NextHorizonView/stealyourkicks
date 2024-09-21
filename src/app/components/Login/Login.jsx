@@ -7,6 +7,8 @@ import {
   IconBrandGithub,
   IconBrandGoogle,
 } from "@tabler/icons-react";
+import AuthContextProvider from "@/app/lib/contexts/AuthContext";
+import LoginBtn from "../header/LoginBtn";
 
 export function Login() {
   const handleSubmit = (e) => {
@@ -57,7 +59,7 @@ export function Login() {
             </span>
             <BottomGradient />
           </button>
-          <button
+          {/* <button
             className=" relative group/btn flex space-x-3 items-center justify-start px-4 w-full text-black rounded-lg h-12 font-medium shadow-md bg-gray-100 dark:bg-gray-800 dark:text-white"
             type="button">
             <IconBrandGoogle className="h-5 w-5 text-gray-800 dark:text-gray-300" />
@@ -65,8 +67,10 @@ export function Login() {
               Sign up with Google
             </span>
             <BottomGradient />
-          </button>
-          
+          </button> */}
+          <AuthContextProvider>
+            <LoginBtn />
+          </AuthContextProvider>
         </div>
       </form>
     </div>
