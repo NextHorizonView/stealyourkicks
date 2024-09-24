@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import AnimatedCursor from "react-animated-cursor";
+// import SmoothScrolling from "./components/header/SmoothScroll";
 // import Scroll from "./components/header/SmoothScroll";
 
 const geistSans = localFont({
@@ -25,16 +26,18 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        { <AnimatedCursor
+
+        {<AnimatedCursor
           innerSize={15}
           outerSize={20}
           color='0, 0, 0'
           outerAlpha={0.2}
           innerScale={0.5}
           outerScale={5}
-        /> }
+        />}
         {/* <Scroll/> */}
         {children}
+
       </body>
     </html>
   );

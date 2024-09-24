@@ -7,3 +7,36 @@
     height: 100vh;
     width: 100vw;
 } */
+
+html{
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+    height: 5px; /* Height of the horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: transparent; /* Background of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+    background: black; /* Color of the scrollbar thumb */
+    border-radius: 50px; /* Rounded edges */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: darkgray; /* Change color on hover */
+}
+
+/* For Firefox */
+* {
+    scrollbar-width: thin; /* Makes scrollbar thinner */
+    scrollbar-color: black transparent; /* Thumb color and track color */
+}
+
+*::-webkit-scrollbar {
+    border-radius: 100px; /* Rounded edges for Webkit browsers */
+}
