@@ -4,7 +4,6 @@ import Image from "next/image";
 import React from "react";
 import { CardBody, CardContainer, CardItem } from "@/app/components/ui/3d-card";
 import Link from "next/link";
-
 // Import your shoe data
 import shoesData from "./Homeshoes.json";
 
@@ -36,7 +35,7 @@ export function HomePageCards() {
                         {/* Buttons and Price */}
                         <div className="flex items-center justify-between mt-8">
                             {/* Buy Button */}
-                            <Link href="/buypage">
+                            <Link href="/pages/buypage">
                                 <CardItem
                                     translateZ={20}
                                     as="button"
