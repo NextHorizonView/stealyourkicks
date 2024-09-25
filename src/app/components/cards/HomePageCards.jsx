@@ -10,13 +10,13 @@ import shoesData from "./Homeshoes.json";
 
 export function HomePageCards() {
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 g-4 p-2 mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 g-4 p-6 px-5 sm:px-10 lg:px-20">
             {shoesData.map((shoe) => (
                 <CardContainer 
                     key={shoe.id} 
-                    className="inter-var p-4 sm:p-8 lg:px-0" 
+                    className="inter-var sm:p-8 lg:px-20" 
                 >
-                    <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-70% rounded-xl p-4 border">
+                    <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-50% rounded-3xl p-4 border">
                         {/* Shoe Name */}
                         <CardItem
                             translateZ="50"
@@ -26,7 +26,7 @@ export function HomePageCards() {
                         </CardItem>
 
                         {/* Shoe Image */}
-                        <CardItem translateZ="100" className="w-full mt-4">
+                        <CardItem translateZ="100" className="w-full mt-2">
                             <Image
                                 src={shoe.image}
                                 height="1000"
