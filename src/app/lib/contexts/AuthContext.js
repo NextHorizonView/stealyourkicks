@@ -4,6 +4,8 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   signOut,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../firebase";
@@ -42,6 +44,30 @@ export default function AuthContextProvider({ children }) {
     }
   };
 
+  const handleSignUpWithEmail = async (email, password) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignInWithEmail = async (email, password) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleLogout = async () => {
     setIsLoading(true);
     setError(null);
@@ -52,7 +78,7 @@ export default function AuthContextProvider({ children }) {
     } finally {
       setIsLoading(false);
     }
-  };
+};
 
   return (
     <AuthContext.Provider
@@ -61,6 +87,8 @@ export default function AuthContextProvider({ children }) {
         isLoading,
         error,
         handleSignInWithGoogle,
+        handleSignUpWithEmail,
+        handleSignInWithEmail,
         handleLogout,
       }}
     >
