@@ -5,10 +5,12 @@ import Link from "next/link";
 import { CgProfile } from "react-icons/cg";
 import { FaCartShopping } from "react-icons/fa6";
 import { FaHeart } from "react-icons/fa";
-
+import { useAuth } from "@/app/lib/contexts/AuthContext";
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const { user, isLoading, handleSignInWithGoogle, handleLogout } =
+    useAuth();
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -17,7 +19,13 @@ const Navbar = () => {
     const toggleProfileMenu = () => {
         setIsProfileOpen(!isProfileOpen);
     };
-
+    if (user) {
+        console.log("User:",user);
+        
+    }
+  if (isLoading) {
+    return <h1>Loading..</h1>;
+  }
     return (
         <nav className="bg-white">
             <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 m-4">
@@ -57,7 +65,8 @@ const Navbar = () => {
                         </button>
 
                         {/* Dropdown Menu */}
-                        {isProfileOpen && (
+                        
+                        {isProfileOpen && !user  && (
                             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                 <Link href="/pages/login" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
                                     Login
