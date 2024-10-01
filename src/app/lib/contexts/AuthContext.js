@@ -78,7 +78,7 @@ export default function AuthContextProvider({ children }) {
     } finally {
       setIsLoading(false);
     }
-};
+  };
 
   return (
     <AuthContext.Provider
@@ -92,10 +92,25 @@ export default function AuthContextProvider({ children }) {
         handleLogout,
       }}
     >
-      {isLoading ? <h2>Loading authentication...</h2> : children}
+      {isLoading ? <LoadingScreen /> : children}
     </AuthContext.Provider>
   );
 }
+
+// Loading screen with a blinking logo
+const LoadingScreen = () => {
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="animate-pulse">
+        <img
+          src="/logo.png" // Replace this with the path to your logo
+          alt="Logo"
+          className="h-16 w-16"
+        />
+      </div>
+    </div>
+  );
+};
 
 // Custom hook to use the AuthContext
 export const useAuth = () => useContext(AuthContext);

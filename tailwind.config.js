@@ -60,9 +60,14 @@ module.exports = {
 					'0%, 100%': { transform: 'translateY(0)' },
 					'50%': { transform: 'translateY(-15px)' }, // Adjusted to a smaller bounce
 				},
+				blink: {
+					'0%, 100%': { opacity: 1 },
+					'50%': { opacity: 0 },
+				},
 			},
 			animation: {
-				'custom-bounce': 'customBounce 2s ease-in-out infinite', // Slower and smoother bounce
+				'custom-bounce': 'customBounce 2s ease-in-out infinite',
+				blink: 'blink 1s infinite', // Slower and smoother bounce
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
