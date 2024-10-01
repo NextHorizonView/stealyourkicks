@@ -61,10 +61,12 @@ const BiddingDetails = () => {
                                 <button className="text-blue-500">Add</button>
                             </div></Link>
 
+                        <Link href="/pages/paymentdetails">
                         <div className="flex justify-between items-center border border-gray-300 px-4 py-3 rounded">
                             <span>Add Payment Method</span>
                             <button className="text-blue-500">Add</button>
                         </div>
+                        </Link>
                     </div>
 
                     {/* Cancel and Proceed Buttons */}
