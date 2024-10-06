@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import ProductManagement from "@/app/AdminFlow/ProductManagement";
+import UserManagement from "@/app/AdminFlow/UserManagement";
 
 // Product management component
 // const ProductsSection = () => {
@@ -70,9 +71,9 @@ export function SidebarComp() {
             case "products":
                 return <ProductManagement/>;  // Render the product section when active
             case "orders":
-                return <div className="p-6">Orders Section</div>;
+                return <UserManagement/>
             case "userManagement":
-                return <div className="p-6">User Management Section</div>;
+                return <UserManagement/> 
             case "coupons":
                 return <div className="p-6">Coupons Section</div>;
             default:
@@ -131,7 +132,7 @@ export function SidebarComp() {
 export const Logo = () => {
     return (
         <Link
-            href="#"
+            href="/"
             className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
         >
             <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
@@ -140,7 +141,7 @@ export const Logo = () => {
                 animate={{ opacity: 1 }}
                 className="font-medium text-black dark:text-white whitespace-pre"
             >
-                Acet Labs
+                Steal Your Kicks
             </motion.span>
         </Link>
     );
@@ -150,10 +151,10 @@ export const Logo = () => {
 export const LogoIcon = () => {
     return (
         <Link
-            href="#"
+            href="/"
             className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
         >
-            <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
+           <img src="/Logo.png" alt="" />
         </Link>
     );
 };
