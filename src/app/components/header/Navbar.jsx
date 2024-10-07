@@ -6,11 +6,12 @@ import { CgProfile } from "react-icons/cg";
 import { FaCartShopping } from "react-icons/fa6";
 import { FaHeart } from "react-icons/fa";
 import { useAuth } from "@/app/lib/contexts/AuthContext";
+
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
-    const { user, isLoading, handleSignInWithGoogle, handleLogout } =
-    useAuth();
+    const [isAdminOpen, setIsAdminOpen] = useState(false); // New state for Admin dropdown
+    const { user, isLoading, handleSignInWithGoogle, handleLogout } = useAuth();
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -19,13 +20,19 @@ const Navbar = () => {
     const toggleProfileMenu = () => {
         setIsProfileOpen(!isProfileOpen);
     };
+
+    const toggleAdminMenu = () => {
+        setIsAdminOpen(!isAdminOpen);
+    };
+
     if (user) {
-        console.log("User:",user);
-        
+        console.log("User:", user);
     }
-  if (isLoading) {
-    return <h1>Loading..</h1>;
-  }
+
+    if (isLoading) {
+        return <h1>Loading...</h1>;
+    }
+
     return (
         <nav className="bg-white">
             <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 m-4">
@@ -64,9 +71,8 @@ const Navbar = () => {
                             <CgProfile className="h-8 w-8" />
                         </button>
 
-                        {/* Dropdown Menu */}
-                        
-                        {isProfileOpen && !user  && (
+                        {/* Profile Dropdown */}
+                        {isProfileOpen && !user && (
                             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                 <Link href="/pages/login" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
                                     Login
@@ -77,12 +83,22 @@ const Navbar = () => {
                             </div>
                         )}
 
-                        {/* <a className="text-black hover:text-indigo-500 transition duration-300 ease-in-out" href="">
-                            <FaCartShopping className="h-8 w-8" />
-                        </a>
-                        <a className="text-black hover:text-indigo-500 transition duration-300 ease-in-out" href="">
-                            <FaHeart className="h-8 w-8" />
-                        </a> */}
+                        {/* Admin Dropdown Toggle */}
+                        <button onClick={toggleAdminMenu} className="text-black hover:text-indigo-500 transition duration-300 ease-in-out">
+                            Admin
+                        </button>
+
+                        {/* Admin Dropdown */}
+                        {isAdminOpen && (
+                            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                                <Link href="/pages/adminlogin" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
+                                    Admin Login
+                                </Link>
+                                <Link href="/pages/adminregister" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
+                                    Admin Register
+                                </Link>
+                            </div>
+                        )}
                     </div>
 
                     {/* Mobile menu button */}
@@ -95,10 +111,10 @@ const Navbar = () => {
                             onClick={toggleMenu}
                         >
                             <span className="sr-only">Open main menu</span>
-                            <svg className={`${isOpen ? 'hidden' : 'block'} h-6 w-6`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <svg className={`${isOpen ? "hidden" : "block"} h-6 w-6`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
-                            <svg className={`${isOpen ? 'block' : 'hidden'} h-6 w-6`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <svg className={`${isOpen ? "block" : "hidden"} h-6 w-6`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>

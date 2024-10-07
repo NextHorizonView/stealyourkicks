@@ -17,7 +17,7 @@ export function Login() {
     console.log("Email: ",email);
     console.log("Password: ",password);
     if (handleSignInWithEmail) {
-      handleSignInWithEmail(email, password);
+      handleSignInWithEmail(email, password ,"/");
     } else {
       console.error("handleSignInWithEmail is not available.");
     }
