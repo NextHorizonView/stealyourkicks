@@ -3,24 +3,35 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
-import { CardBody, CardContainer, CardItem } from "@/app/components/ui/3d-card";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { CardBody, CardContainer, CardItem } from "@/app/components/ui/3d-card";
 import shoesData from "./Homeshoes.json";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { AiOutlineShoppingCart } from 'react-icons/ai'; // Shopping cart icon
+import { AiOutlineShopping } from 'react-icons/ai'; // Outlined Buy icon
 
 export function HomePageCards() {
+    const [cart, setCart] = useState([]);
+
+    const addToCart = (shoe) => {
+        setCart((prevCart) => [...prevCart, shoe]);
+        toast.success(`${shoe.name} added to cart!`, {
+            position: "bottom-right",
+            autoClose: 2000,
+        });
+    };
+
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 g-4 p-6 px-5 sm:px-10 lg:px-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-6 px-5 pt-15 sm:px-10 lg:px-20">
             {shoesData.map((shoe) => (
-                <CardContainer 
-                    key={shoe.id} 
-                    className="inter-var sm:p-8 lg:px-20" 
-                >
-                    <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-50% rounded-3xl p-4 border">
+                <CardContainer key={shoe.id} className="inter-var sm:p-8">
+                    <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-full rounded-3xl p-4 border">
                         {/* Shoe Name */}
                         <CardItem
                             translateZ="50"
-                            className="text-xl font-bold text-neutral-600 dark:text-white"
+                            className="text-xl font-bold text-neutral-600 dark:text-white text-center"
                         >
                             {shoe.name}
                         </CardItem>
@@ -31,35 +42,45 @@ export function HomePageCards() {
                                 src={shoe.image}
                                 height="1000"
                                 width="1000"
-                                className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+                                className="h-48 w-full object-cover rounded-xl group-hover/card:shadow-xl"
                                 alt={shoe.name}
                             />
                         </CardItem>
 
-                        {/* Buttons and Price */}
-                        <div className="flex items-center justify-between mt-8">
-                            {/* Buy Button */}
-                            <Link href="/pages/buypage">
-                                <CardItem
-                                    translateZ={20}
-                                    as="button"
-                                    className="px-6 py-3 rounded-3xl bg-black text-white text-sm font-bold hover:bg-gray-800 transition w-full sm:w-auto text-center"
-                                >
-                                    Buy Now
-                                </CardItem>
+                        {/* Price and Action Buttons */}
+                        <div className="flex items-center justify-between mt-4">
+                            {/* Buy Now Button with Outlined Icon */}
+                            <Link href = '/pages/buypage'>
+                            <button
+                                className="px-2 py-2 rounded-3xl  text-indigo-600 text-sm font-bold transition w-auto flex items-center justify-center"
+                            >
+                                <AiOutlineShopping className="size-5" /> {/* Outlined Buy Icon */}
+                            </button>
+                            
                             </Link>
+                            
 
                             {/* Price Display */}
                             <CardItem
                                 translateZ={20}
-                                className="text-xl font-bold text-neutral-600 dark:text-white ml-4"
+                                className="text-xl font-bold text-neutral-600 dark:text-white text-center flex-grow"
                             >
                                 {shoe.price}
                             </CardItem>
+
+                            {/* Add to Cart Icon */}
+                            <button
+                                onClick={() => addToCart(shoe)}
+                                className="text-xl text-indigo-600 hover:text-indigo-700"
+                                aria-label="Add to cart"
+                            >
+                                <AiOutlineShoppingCart />
+                            </button>
                         </div>
                     </CardBody>
                 </CardContainer>
             ))}
+            <ToastContainer />
         </div>
     );
 }
