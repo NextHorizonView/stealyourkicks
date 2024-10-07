@@ -54,7 +54,7 @@ const ProductManagement = () => {
                     <div key={product.id} className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-lg shadow-md">
                         <img
                             src={product.image}
-                            alt={product.name}
+                            alt={product.name} 
                             className="w-full h-48 object-cover rounded-lg"
                         />
                         <div className="mt-4">

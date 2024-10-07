@@ -1,9 +1,15 @@
 import React from 'react'
+import Navbar from '../components/header/Navbar'
 import { CartCard } from '../components/cards/CartCard'
 
 const CartDetails = () => {
   return (
-    <div><CartCard/></div>
+
+    <div>
+      <Navbar />
+      <CartCard />
+
+    </div>
   )
 }
 
