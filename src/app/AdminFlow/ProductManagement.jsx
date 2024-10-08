@@ -8,10 +8,13 @@ const ProductManagement = () => {
     const { data, error, isLoading } = useProducts();
     const [editingProduct, setEditingProduct] = useState(null);
     const [newProduct, setNewProduct] = useState({
+        ProductId: "", // Adding ProductId
         ProductName: "",
         ProductImage: "",
         ProductPrize: "",
-        ProductSizes: [{ size: "", stock: "" }], // Array for sizes and stock
+        ProductIsCoupon: false,
+        ProductSize: [{ SizeName: "", SizeStock: "" }], // Sizes and stock array
+        ProductTotalStock: "0", // Total stock calculation
     });
 
     if (isLoading) {
@@ -25,14 +28,27 @@ const ProductManagement = () => {
     const products = data || [];
 
     const handleEditProduct = (product) => {
-        setEditingProduct(product);
+        setEditingProduct({
+            ...product,
+            ProductSize: product.ProductSize || [], // Ensure it's an array
+        });
     };
 
     const handleSaveProduct = async () => {
-        if (editingProduct && editingProduct.id) {
+        console.log("Save CLciked");
+        
+        if (editingProduct && editingProduct.ProductId) {
             try {
-                await updateProduct(editingProduct); // Update product in Firestore
-                setEditingProduct(null); // Exit edit mode
+                // Calculate total stock before saving
+                const totalStock = editingProduct.ProductSize.reduce(
+                    (sum, size) => sum + Number(size.SizeStock),
+                    0
+                );
+                await updateProduct({
+                    ...editingProduct,
+                    // ProductTotalStock: totalStock.toString(),
+                }); // Update product in Firestore
+                setEditingProduct(null); // Exit edit mCommandode
             } catch (error) {
                 console.error("Error saving product:", error);
             }
@@ -41,12 +57,24 @@ const ProductManagement = () => {
 
     const handleAddProduct = async () => {
         try {
-            await addProduct(newProduct); // Add product to Firestore
+            const totalStock = newProduct.ProductSize.reduce(
+                (sum, size) => sum + Number(size.SizeStock),
+                0
+            );
+            console.log("New Product",newProduct);
+            
+            await addProduct({
+                ...newProduct,
+                ProductTotalStock: totalStock.toString(),
+            }); // Add product to Firestore
             setNewProduct({
+                ProductId: "",
                 ProductName: "",
                 ProductImage: "",
                 ProductPrize: "",
-                ProductSizes: [{ size: "", stock: "" }], // Reset form
+                ProductIsCoupon: false,
+                ProductSize: [{ SizeName: "", SizeStock: "" }], // Reset form
+                ProductTotalStock: "0",
             });
         } catch (error) {
             console.error("Error adding product:", error);
@@ -54,15 +82,15 @@ const ProductManagement = () => {
     };
 
     const handleSizeChange = (index, field, value) => {
-        const updatedSizes = [...newProduct.ProductSizes];
+        const updatedSizes = [...newProduct.ProductSize];
         updatedSizes[index][field] = value;
-        setNewProduct({ ...newProduct, ProductSizes: updatedSizes });
+        setNewProduct({ ...newProduct, ProductSize: updatedSizes });
     };
 
     const addNewSize = () => {
         setNewProduct({
             ...newProduct,
-            ProductSizes: [...newProduct.ProductSizes, { size: "", stock: "" }],
+            ProductSize: [...newProduct.ProductSize, { SizeName: "", SizeStock: "" }],
         });
     };
 
@@ -73,7 +101,7 @@ const ProductManagement = () => {
             {/* Display Products */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-3">
                 {products.map((product) => (
-                    <div key={product.id} className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-lg shadow-md">
+                    <div key={product.ProductId} className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-lg shadow-md">
                         <img
                             src={product.ProductImage}
                             alt={product.ProductName}
@@ -82,14 +110,14 @@ const ProductManagement = () => {
                         <div className="mt-4">
                             <h3 className="font-bold text-xl">{product.ProductName}</h3>
                             <p className="text-gray-600 dark:text-gray-300">Price: {product.ProductPrize}</p>
+                            <p className="text-gray-600 dark:text-gray-300">Total Stock: {product.ProductTotalStock}</p>
 
                             {/* Display sizes and stock */}
                             <div>
-                                {/* Ensure ProductSizes is an array before calling .map() */}
-                                {product.ProductSizes?.length > 0 ? (
-                                    product.ProductSizes.map((sizeObj, index) => (
+                                {product.ProductSize?.length > 0 ? (
+                                    product.ProductSize.map((sizeObj, index) => (
                                         <p key={index} className="text-gray-600 dark:text-gray-300">
-                                            Size: {sizeObj.size}, Stock: {sizeObj.stock}
+                                            Size: {sizeObj.SizeName}, Stock: {sizeObj.SizeStock}
                                         </p>
                                     ))
                                 ) : (
@@ -109,76 +137,78 @@ const ProductManagement = () => {
             </div>
 
             {editingProduct && (
-    <div className="mb-10">
-        <h3 className="text-xl font-semibold">Edit Product</h3>
-        <div className="flex flex-col gap-2">
-            <input
-                type="text"
-                value={editingProduct.ProductName}
-                onChange={(e) => setEditingProduct({ ...editingProduct, ProductName: e.target.value })}
-                className="border p-2 rounded"
-                placeholder="Product Name"
-            />
-            <input
-                type="text"
-                value={editingProduct.ProductPrize}
-                onChange={(e) => setEditingProduct({ ...editingProduct, ProductPrize: e.target.value })}
-                className="border p-2 rounded"
-                placeholder="Product Price"
-            />
+                <div className="mb-10">
+                    <h3 className="text-xl font-semibold">Edit Product</h3>
+                    <div className="flex flex-col gap-2">
+                        <input
+                            type="text"
+                            value={editingProduct.ProductName}
+                            onChange={(e) =>
+                                setEditingProduct({ ...editingProduct, ProductName: e.target.value })
+                            }
+                            className="border p-2 rounded"
+                            placeholder="Product Name"
+                        />
+                        <input
+                            type="text"
+                            value={editingProduct.ProductPrize}
+                            onChange={(e) =>
+                                setEditingProduct({ ...editingProduct, ProductPrize: e.target.value })
+                            }
+                            className="border p-2 rounded"
+                            placeholder="Product Price"
+                        />
 
-            {/* Editing Sizes and Stock */}
-            <h4 className="text-lg font-semibold mt-4">Edit Sizes and Stock</h4>
-            {(editingProduct.ProductSizes || []).map((sizeObj, index) => (
-                <div key={index} className="flex gap-2 mb-2">
-                    <input
-                        type="text"
-                        value={sizeObj.size}
-                        onChange={(e) => {
-                            const updatedSizes = [...(editingProduct.ProductSizes || [])];
-                            updatedSizes[index].size = e.target.value;
-                            setEditingProduct({ ...editingProduct, ProductSizes: updatedSizes });
-                        }}
-                        className="border p-2 rounded"
-                        placeholder="Size"
-                    />
-                    <input
-                        type="number"
-                        value={sizeObj.stock}
-                        onChange={(e) => {
-                            const updatedSizes = [...(editingProduct.ProductSizes || [])];
-                            updatedSizes[index].stock = e.target.value;
-                            setEditingProduct({ ...editingProduct, ProductSizes: updatedSizes });
-                        }}
-                        className="border p-2 rounded"
-                        placeholder="Stock"
-                    />
+                        {/* Editing Sizes and Stock */}
+                        <h4 className="text-lg font-semibold mt-4">Edit Sizes and Stock</h4>
+                        {(editingProduct.ProductSize || []).map((sizeObj, index) => (
+                            <div key={index} className="flex gap-2 mb-2">
+                                <input
+                                    type="text"
+                                    value={sizeObj.SizeName}
+                                    onChange={(e) => {
+                                        const updatedSizes = [...editingProduct.ProductSize];
+                                        updatedSizes[index].SizeName = e.target.value;
+                                        setEditingProduct({ ...editingProduct, ProductSize: updatedSizes });
+                                    }}
+                                    className="border p-2 rounded"
+                                    placeholder="Size"
+                                />
+                                <input
+                                    type="number"
+                                    value={sizeObj.SizeStock}
+                                    onChange={(e) => {
+                                        const updatedSizes = [...editingProduct.ProductSize];
+                                        updatedSizes[index].SizeStock = e.target.value;
+                                        setEditingProduct({ ...editingProduct, ProductSize: updatedSizes });
+                                    }}
+                                    className="border p-2 rounded"
+                                    placeholder="Stock"
+                                />
+                            </div>
+                        ))}
+
+                        {/* Add New Size During Editing */}
+                        <button
+                            onClick={() => {
+                                const updatedSizes = [...editingProduct.ProductSize, { SizeName: "", SizeStock: "" }];
+                                
+                                setEditingProduct({ ...editingProduct, ProductSize: updatedSizes });
+                            }}
+                            className="bg-gray-500 text-white px-4 py-2 rounded mt-2"
+                        >
+                            Add Size
+                        </button>
+
+                        <button
+                            onClick={handleSaveProduct}
+                            className="bg-green-500 text-white px-4 py-2 rounded mt-2"
+                        >
+                            Save
+                        </button>
+                    </div>
                 </div>
-            ))}
-
-            {/* Add New Size and Stock During Editing */}
-            <button
-                onClick={() => {
-                    const updatedSizes = [...(editingProduct.ProductSizes || []), { size: "", stock: "" }];
-                    setEditingProduct({ ...editingProduct, ProductSizes: updatedSizes });
-                }}
-                className="bg-gray-500 text-white px-4 py-2 rounded mt-2"
-            >
-                Add Size
-            </button>
-
-            <button
-                onClick={handleSaveProduct}
-                className="bg-green-500 text-white px-4 py-2 rounded mt-2"
-            >
-                Save
-            </button>
-        </div>
-    </div>
-)}
-
-
-
+            )}
 
             {/* Add New Product */}
             <div>
@@ -207,19 +237,19 @@ const ProductManagement = () => {
                     />
 
                     {/* Product Sizes Input */}
-                    {newProduct.ProductSizes.map((sizeObj, index) => (
+                    {newProduct.ProductSize.map((sizeObj, index) => (
                         <div key={index} className="flex gap-2">
                             <input
                                 type="text"
-                                value={sizeObj.size}
-                                onChange={(e) => handleSizeChange(index, "size", e.target.value)}
+                                value={sizeObj.SizeName}
+                                onChange={(e) => handleSizeChange(index, "SizeName", e.target.value)}
                                 className="border p-2 rounded"
                                 placeholder="Size"
                             />
                             <input
                                 type="number"
-                                value={sizeObj.stock}
-                                onChange={(e) => handleSizeChange(index, "stock", e.target.value)}
+                                value={sizeObj.SizeStock}
+                                onChange={(e) => handleSizeChange(index, "SizeStock", e.target.value)}
                                 className="border p-2 rounded"
                                 placeholder="Stock"
                             />
@@ -235,7 +265,7 @@ const ProductManagement = () => {
 
                     <button
                         onClick={handleAddProduct}
-                        className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+                        className="bg-green-500 text-white SHOpx-4 py-2 rounded mt-2"
                     >
                         Add Product
                     </button>

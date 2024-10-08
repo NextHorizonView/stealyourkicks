@@ -6,7 +6,8 @@ const nextConfig = {
         domains: [
             "images.unsplash.com",
             "encrypted-tbn1.gstatic.com",
-            "image.goat.com"
+            "image.goat.com",
+            'static.nike.com'
         ],
     },
 };
