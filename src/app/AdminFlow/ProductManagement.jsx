@@ -11,7 +11,8 @@ const ProductManagement = () => {
         ProductName: "",
         ProductImage: "",
         ProductPrize: "",
-        ProductSizes: [{ size: "", stock: "" }], // Array for sizes and stock
+        ProductSizes: [{ size: "", stock: "" }],
+        hasCoupons: false, // New state property for coupons
     });
 
     if (isLoading) {
@@ -46,7 +47,8 @@ const ProductManagement = () => {
                 ProductName: "",
                 ProductImage: "",
                 ProductPrize: "",
-                ProductSizes: [{ size: "", stock: "" }], // Reset form
+                ProductSizes: [{ size: "", stock: "" }],
+                hasCoupons: false, // Reset form including the checkbox
             });
         } catch (error) {
             console.error("Error adding product:", error);
@@ -85,7 +87,6 @@ const ProductManagement = () => {
 
                             {/* Display sizes and stock */}
                             <div>
-                                {/* Ensure ProductSizes is an array before calling .map() */}
                                 {product.ProductSizes?.length > 0 ? (
                                     product.ProductSizes.map((sizeObj, index) => (
                                         <p key={index} className="text-gray-600 dark:text-gray-300">
@@ -96,6 +97,11 @@ const ProductManagement = () => {
                                     <p className="text-gray-600 dark:text-gray-300">No sizes available</p>
                                 )}
                             </div>
+
+                            {/* Display if product has coupons */}
+                            <p className="text-gray-600 dark:text-gray-300">
+                                Coupons Available: {product.hasCoupons ? "Yes" : "No"}
+                            </p>
 
                             <button
                                 onClick={() => handleEditProduct(product)}
@@ -108,77 +114,85 @@ const ProductManagement = () => {
                 ))}
             </div>
 
+            {/* Edit Product */}
             {editingProduct && (
-    <div className="mb-10">
-        <h3 className="text-xl font-semibold">Edit Product</h3>
-        <div className="flex flex-col gap-2">
-            <input
-                type="text"
-                value={editingProduct.ProductName}
-                onChange={(e) => setEditingProduct({ ...editingProduct, ProductName: e.target.value })}
-                className="border p-2 rounded"
-                placeholder="Product Name"
-            />
-            <input
-                type="text"
-                value={editingProduct.ProductPrize}
-                onChange={(e) => setEditingProduct({ ...editingProduct, ProductPrize: e.target.value })}
-                className="border p-2 rounded"
-                placeholder="Product Price"
-            />
+                <div className="mb-10">
+                    <h3 className="text-xl font-semibold">Edit Product</h3>
+                    <div className="flex flex-col gap-2">
+                        <input
+                            type="text"
+                            value={editingProduct.ProductName}
+                            onChange={(e) => setEditingProduct({ ...editingProduct, ProductName: e.target.value })}
+                            className="border p-2 rounded"
+                            placeholder="Product Name"
+                        />
+                        <input
+                            type="text"
+                            value={editingProduct.ProductPrize}
+                            onChange={(e) => setEditingProduct({ ...editingProduct, ProductPrize: e.target.value })}
+                            className="border p-2 rounded"
+                            placeholder="Product Price"
+                        />
 
-            {/* Editing Sizes and Stock */}
-            <h4 className="text-lg font-semibold mt-4">Edit Sizes and Stock</h4>
-            {(editingProduct.ProductSizes || []).map((sizeObj, index) => (
-                <div key={index} className="flex gap-2 mb-2">
-                    <input
-                        type="text"
-                        value={sizeObj.size}
-                        onChange={(e) => {
-                            const updatedSizes = [...(editingProduct.ProductSizes || [])];
-                            updatedSizes[index].size = e.target.value;
-                            setEditingProduct({ ...editingProduct, ProductSizes: updatedSizes });
-                        }}
-                        className="border p-2 rounded"
-                        placeholder="Size"
-                    />
-                    <input
-                        type="number"
-                        value={sizeObj.stock}
-                        onChange={(e) => {
-                            const updatedSizes = [...(editingProduct.ProductSizes || [])];
-                            updatedSizes[index].stock = e.target.value;
-                            setEditingProduct({ ...editingProduct, ProductSizes: updatedSizes });
-                        }}
-                        className="border p-2 rounded"
-                        placeholder="Stock"
-                    />
+                        {/* Editing Sizes and Stock */}
+                        <h4 className="text-lg font-semibold mt-4">Edit Sizes and Stock</h4>
+                        {(editingProduct.ProductSizes || []).map((sizeObj, index) => (
+                            <div key={index} className="flex gap-2 mb-2">
+                                <input
+                                    type="text"
+                                    value={sizeObj.size}
+                                    onChange={(e) => {
+                                        const updatedSizes = [...(editingProduct.ProductSizes || [])];
+                                        updatedSizes[index].size = e.target.value;
+                                        setEditingProduct({ ...editingProduct, ProductSizes: updatedSizes });
+                                    }}
+                                    className="border p-2 rounded"
+                                    placeholder="Size"
+                                />
+                                <input
+                                    type="number"
+                                    value={sizeObj.stock}
+                                    onChange={(e) => {
+                                        const updatedSizes = [...(editingProduct.ProductSizes || [])];
+                                        updatedSizes[index].stock = e.target.value;
+                                        setEditingProduct({ ...editingProduct, ProductSizes: updatedSizes });
+                                    }}
+                                    className="border p-2 rounded"
+                                    placeholder="Stock"
+                                />
+                            </div>
+                        ))}
+
+                        {/* Add New Size and Stock During Editing */}
+                        <button
+                            onClick={() => {
+                                const updatedSizes = [...(editingProduct.ProductSizes || []), { size: "", stock: "" }];
+                                setEditingProduct({ ...editingProduct, ProductSizes: updatedSizes });
+                            }}
+                            className="bg-gray-500 text-white px-4 py-2 rounded mt-2"
+                        >
+                            Add Size
+                        </button>
+
+                        {/* Coupons Checkbox for Edit */}
+                        <label className="mt-2">
+                            <input
+                                type="checkbox"
+                                checked={editingProduct.hasCoupons}
+                                onChange={(e) => setEditingProduct({ ...editingProduct, hasCoupons: e.target.checked })}
+                            />
+                            {" "}Product Coupons
+                        </label>
+
+                        <button
+                            onClick={handleSaveProduct}
+                            className="bg-green-500 text-white px-4 py-2 rounded mt-2"
+                        >
+                            Save
+                        </button>
+                    </div>
                 </div>
-            ))}
-
-            {/* Add New Size and Stock During Editing */}
-            <button
-                onClick={() => {
-                    const updatedSizes = [...(editingProduct.ProductSizes || []), { size: "", stock: "" }];
-                    setEditingProduct({ ...editingProduct, ProductSizes: updatedSizes });
-                }}
-                className="bg-gray-500 text-white px-4 py-2 rounded mt-2"
-            >
-                Add Size
-            </button>
-
-            <button
-                onClick={handleSaveProduct}
-                className="bg-green-500 text-white px-4 py-2 rounded mt-2"
-            >
-                Save
-            </button>
-        </div>
-    </div>
-)}
-
-
-
+            )}
 
             {/* Add New Product */}
             <div>
@@ -232,6 +246,16 @@ const ProductManagement = () => {
                     >
                         Add Size
                     </button>
+
+                    {/* Coupons Checkbox for Add New Product */}
+                    <label className="mt-2">
+                        <input
+                            type="checkbox"
+                            checked={newProduct.hasCoupons}
+                            onChange={(e) => setNewProduct({ ...newProduct, hasCoupons: e.target.checked })}
+                        />
+                        {" "}Product Coupons
+                    </label>
 
                     <button
                         onClick={handleAddProduct}
