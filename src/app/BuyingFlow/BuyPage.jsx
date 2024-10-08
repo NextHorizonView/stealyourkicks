@@ -34,11 +34,11 @@ const BuyPage = () => {
                             {/* Buttons */}
                             <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
                                 <Link href="/pages/biddingdetails">
-                                   
-                                        <button className="bg-black text-white font-bold py-2 px-4 rounded w-full">
-                                            Place Bid
-                                        </button>
-                                   
+
+                                    <button className="bg-black text-white font-bold py-2 px-4 rounded w-full">
+                                        Place Bid
+                                    </button>
+
                                 </Link>
 
                                 <button className="border border-black text-black font-bold py-2 px-4 rounded w-full flex-grow">
