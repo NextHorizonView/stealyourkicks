@@ -125,6 +125,11 @@ const ProductManagement = () => {
                                 )}
                             </div>
 
+                            {/* Display if product has coupons */}
+                            <p className="text-gray-600 dark:text-gray-300">
+                                Coupons Available: {product.hasCoupons ? "Yes" : "No"}
+                            </p>
+
                             <button
                                 onClick={() => handleEditProduct(product)}
                                 className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
@@ -136,6 +141,7 @@ const ProductManagement = () => {
                 ))}
             </div>
 
+            {/* Edit Product */}
             {editingProduct && (
                 <div className="mb-10">
                     <h3 className="text-xl font-semibold">Edit Product</h3>
@@ -188,17 +194,27 @@ const ProductManagement = () => {
                             </div>
                         ))}
 
-                        {/* Add New Size During Editing */}
-                        <button
-                            onClick={() => {
-                                const updatedSizes = [...editingProduct.ProductSize, { SizeName: "", SizeStock: "" }];
+                                    {/* Add New Size During Editing */}
+                                    <button
+                                        onClick={() => {
+                                            const updatedSizes = [...editingProduct.ProductSize, { SizeName: "", SizeStock: "" }];
                                 
-                                setEditingProduct({ ...editingProduct, ProductSize: updatedSizes });
-                            }}
-                            className="bg-gray-500 text-white px-4 py-2 rounded mt-2"
-                        >
-                            Add Size
-                        </button>
+                                            setEditingProduct({ ...editingProduct, ProductSize: updatedSizes });
+                                        }}
+                                        className="bg-gray-500 text-white px-4 py-2 rounded mt-2"
+                                    >
+                                        Add Size
+                                    </button>
+
+                        {/* Coupons Checkbox for Edit */}
+                        <label className="mt-2">
+                            <input
+                                type="checkbox"
+                                checked={editingProduct.hasCoupons}
+                                onChange={(e) => setEditingProduct({ ...editingProduct, hasCoupons: e.target.checked })}
+                            />
+                            {" "}Product Coupons
+                        </label>
 
                         <button
                             onClick={handleSaveProduct}
@@ -262,6 +278,16 @@ const ProductManagement = () => {
                     >
                         Add Size
                     </button>
+
+                    {/* Coupons Checkbox for Add New Product */}
+                    <label className="mt-2">
+                        <input
+                            type="checkbox"
+                            checked={newProduct.hasCoupons}
+                            onChange={(e) => setNewProduct({ ...newProduct, hasCoupons: e.target.checked })}
+                        />
+                        {" "}Product Coupons
+                    </label>
 
                     <button
                         onClick={handleAddProduct}

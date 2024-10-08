@@ -1,17 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { CgProfile } from "react-icons/cg";
-import { FaCartShopping } from "react-icons/fa6";
-import { FaHeart } from "react-icons/fa";
 import { useAuth } from "@/app/lib/contexts/AuthContext";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
-    const [isAdminOpen, setIsAdminOpen] = useState(false); // New state for Admin dropdown
-    const { user, isLoading, handleSignInWithGoogle, handleLogout } = useAuth();
+    const [isAdminOpen, setIsAdminOpen] = useState(false); 
+    const { user, isLoading } = useAuth();
+
+    const profileRef = useRef(null);
+    const adminRef = useRef(null);
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -25,9 +26,21 @@ const Navbar = () => {
         setIsAdminOpen(!isAdminOpen);
     };
 
-    if (user) {
-        console.log("User:", user);
-    }
+    const handleClickOutside = (event) => {
+        if (profileRef.current && !profileRef.current.contains(event.target)) {
+            setIsProfileOpen(false);
+        }
+        if (adminRef.current && !adminRef.current.contains(event.target)) {
+            setIsAdminOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     if (isLoading) {
         return <h1>Loading...</h1>;
@@ -46,22 +59,10 @@ const Navbar = () => {
 
                     {/* Menu Items */}
                     <div className="hidden sm:flex sm:ml-auto space-x-4">
-                        <Link href="/" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">
-                            Home
-                            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-500 transition-all duration-300 ease-in-out hover:w-full"></span>
-                        </Link>
-                        <Link href="/about" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">
-                            About
-                            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-500 transition-all duration-300 ease-in-out hover:w-full"></span>
-                        </Link>
-                        <Link href="/services" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">
-                            Services
-                            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-500 transition-all duration-300 ease-in-out hover:w-full"></span>
-                        </Link>
-                        <Link href="/contact" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">
-                            Contact
-                            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-500 transition-all duration-300 ease-in-out hover:w-full"></span>
-                        </Link>
+                        <Link href="/" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Home</Link>
+                        <Link href="/about" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">About</Link>
+                        <Link href="/services" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Services</Link>
+                        <Link href="/contact" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Contact</Link>
                     </div>
 
                     {/* Icons Section */}
@@ -73,7 +74,7 @@ const Navbar = () => {
 
                         {/* Profile Dropdown */}
                         {isProfileOpen && !user && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                            <div ref={profileRef} className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                 <Link href="/pages/login" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
                                     Login
                                 </Link>
@@ -90,12 +91,9 @@ const Navbar = () => {
 
                         {/* Admin Dropdown */}
                         {isAdminOpen && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                            <div ref={adminRef} className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                 <Link href="/pages/adminlogin" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
                                     Admin Login
-                                </Link>
-                                <Link href="/pages/adminregister" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
-                                    Admin Register
                                 </Link>
                             </div>
                         )}
@@ -125,18 +123,10 @@ const Navbar = () => {
             {/* Mobile menu, toggle based on menu state */}
             <div className={`${isOpen ? "block" : "hidden"} sm:hidden`} id="mobile-menu">
                 <div className="px-2 pt-2 pb-3 space-y-1">
-                    <Link href="/" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">
-                        Home
-                    </Link>
-                    <Link href="/about" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">
-                        About
-                    </Link>
-                    <Link href="/services" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">
-                        Services
-                    </Link>
-                    <Link href="/contact" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">
-                        Contact
-                    </Link>
+                    <Link href="/" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Home</Link>
+                    <Link href="/about" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">About</Link>
+                    <Link href="/services" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Services</Link>
+                    <Link href="/contact" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Contact</Link>
                 </div>
             </div>
         </nav>

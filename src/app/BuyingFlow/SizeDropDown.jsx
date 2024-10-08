@@ -7,14 +7,26 @@ const SizeDropDown = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedSize, setSelectedSize] = useState(null);
 
-    // Sizes are now fetched from the JSON file
+    // Sizes are fetched from the JSON file
     const sizes = sizeData.sizes;
 
     const toggleDropdown = () => setIsOpen(!isOpen);
 
     const selectSize = (size) => {
         setSelectedSize(size);
-        setIsOpen(false);
+        setIsOpen(false); // Close dropdown on selection
+    };
+
+    const handleCancel = () => {
+        setIsOpen(false); // Close dropdown without selection
+    };
+
+    const handleProceed = () => {
+        if (selectedSize) {
+            // Implement your proceed logic here
+            console.log(`Proceeding with size: ${selectedSize}`);
+            // You might want to call a function or navigate to another page, etc.
+        }
     };
 
     return (
@@ -42,10 +54,10 @@ const SizeDropDown = () => {
                         ))}
                     </div>
                     <div className="flex justify-between mt-4">
-                        <button className="bg-white text-gray-600 border border-gray-400 px-4 py-2 rounded">
+                        <button onClick={handleCancel} className="bg-white text-gray-600 border border-gray-400 px-4 py-2 rounded">
                             Cancel
                         </button>
-                        <button className="bg-blue-500 text-white px-4 py-2 rounded">
+                        <button onClick={handleProceed} className="bg-blue-500 text-white px-4 py-2 rounded">
                             Proceed
                         </button>
                     </div>
