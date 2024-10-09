@@ -3,16 +3,15 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { CgProfile } from "react-icons/cg";
+import { BsCartFill } from "react-icons/bs"; // Cart icon
 import { useAuth } from "@/app/lib/contexts/AuthContext";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
-    const [isAdminOpen, setIsAdminOpen] = useState(false); 
     const { user, isLoading } = useAuth();
 
     const profileRef = useRef(null);
-    const adminRef = useRef(null);
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -22,16 +21,9 @@ const Navbar = () => {
         setIsProfileOpen(!isProfileOpen);
     };
 
-    const toggleAdminMenu = () => {
-        setIsAdminOpen(!isAdminOpen);
-    };
-
     const handleClickOutside = (event) => {
         if (profileRef.current && !profileRef.current.contains(event.target)) {
             setIsProfileOpen(false);
-        }
-        if (adminRef.current && !adminRef.current.contains(event.target)) {
-            setIsAdminOpen(false);
         }
     };
 
@@ -67,31 +59,42 @@ const Navbar = () => {
 
                     {/* Icons Section */}
                     <div className="flex items-center space-x-7 ml-8 relative">
+                        {/* Cart Button */}
+                        <Link href="/pages/cart">
+                            <button className="text-black hover:text-indigo-500 transition duration-300 ease-in-out">
+                                <BsCartFill className="h-8 w-8" />
+                            </button>
+
+                        </Link>
+
                         {/* Profile Icon */}
                         <button onClick={toggleProfileMenu} className="text-black hover:text-indigo-500 transition duration-300 ease-in-out">
                             <CgProfile className="h-8 w-8" />
                         </button>
 
                         {/* Profile Dropdown */}
-                        {isProfileOpen && !user && (
+                        {isProfileOpen && (
                             <div ref={profileRef} className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                                <Link href="/pages/login" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
-                                    Login
-                                </Link>
-                                <Link href="/pages/register" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
-                                    Register
-                                </Link>
-                            </div>
-                        )}
-
-                        {/* Admin Dropdown Toggle */}
-                        <button onClick={toggleAdminMenu} className="text-black hover:text-indigo-500 transition duration-300 ease-in-out">
-                            Admin
-                        </button>
-
-                        {/* Admin Dropdown */}
-                        {isAdminOpen && (
-                            <div ref={adminRef} className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                                {!user ? (
+                                    <>
+                                        <Link href="/pages/login" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
+                                            Login
+                                        </Link>
+                                        <Link href="/pages/register" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
+                                            Register
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Link href="/pages/profile" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
+                                            Profile
+                                        </Link>
+                                        <Link href="/pages/logout" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
+                                            Logout
+                                        </Link>
+                                    </>
+                                )}
+                                {/* Admin Login */}
                                 <Link href="/pages/adminlogin" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
                                     Admin Login
                                 </Link>
