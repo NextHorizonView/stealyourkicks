@@ -4,7 +4,12 @@ import Image from "next/image";
 import React from "react";
 import { CardBody, CardContainer, CardItem } from "../ui/3d-card";
 
-export function BuyPageCard({ shoe }) {
+export function BuyPageCard({ image,productName }) {
+    // if ({shoe}) {
+    //     console.log("Shoe",{shoe});
+        
+    //     return <p>{shoe}</p>
+    // }
     return (
         <CardContainer className="inter-var">
             <CardBody
@@ -13,17 +18,17 @@ export function BuyPageCard({ shoe }) {
                 {/* Display the shoe image */}
                 <CardItem translateZ="100" className="w-full mt-4">
                     <Image
-                        src={shoe.ProductImage}
+                        src={image}
                         height="1000"
                         width="1000"
                         className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
-                        alt={shoe.ProductName}
+                        alt={productName}
                     />
                 </CardItem>
 
                 {/* Display the shoe name */}
                 <CardItem translateZ="50" className="text-xl font-bold text-neutral-600 dark:text-white text-center">
-                    {shoe.ProductName}
+                    {productName}
                 </CardItem>
             </CardBody>
         </CardContainer>

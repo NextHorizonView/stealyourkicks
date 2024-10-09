@@ -58,16 +58,13 @@ export function HomePageCards() {
                         {/* Price and Action Buttons */}
                         <div className="flex items-center justify-between mt-4">
                             {/* Buy Now Button with Outlined Icon */}
-                            <Link href = {`/pages/buypage/${shoe.id}`}>
+                            <Link key={shoe.id} href = {`/pages/shoe/?id=${shoe?.id}/`}>
                             <button
                                 className="px-2 py-2 rounded-3xl  text-indigo-600 text-sm font-bold transition w-auto flex items-center justify-center"
                             >
                                 <AiOutlineShopping className="size-5" /> {/* Outlined Buy Icon */}
                             </button>
-                            
                             </Link>
-                            
-
                             {/* Price Display */}
                             <CardItem
                                 translateZ={20}

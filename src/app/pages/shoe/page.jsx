@@ -1,13 +1,21 @@
+"use client";
+
 import BuyPage from '@/app/BuyingFlow/BuyPage';
 import { HomePageCards } from '@/app/components/cards/HomePageCards';
+import { useSearchParams } from 'next/navigation';
 import React from 'react';
 
 const Page = () => {
+  const searchParams = useSearchParams()
+  const id = searchParams.get('id')
+  console.log("id",id);
+  
   return (
     <>
       {/* BuyPage Section */}
       <div>
-        <BuyPage />
+        <p>PosId {id}</p>
+        <BuyPage shoeid={id}/>
       </div>
 
       {/* Similar Items Section */}
