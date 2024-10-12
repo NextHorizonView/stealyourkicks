@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import { db } from '../../firebase';
 import { collection, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import useSWRSubscription from 'swr/subscription';

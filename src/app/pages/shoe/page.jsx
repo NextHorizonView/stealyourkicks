@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import BuyPage from '@/app/BuyingFlow/BuyPage';
 import { HomePageCards } from '@/app/components/cards/HomePageCards';
