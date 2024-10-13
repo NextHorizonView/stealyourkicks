@@ -1,5 +1,6 @@
 import React from 'react';
-import logo from 'logo.png'; 
+// import logo from 'logo.png'; 
+
 import Image from 'next/image'; // Next.js Image component
 import { FaGithub, FaInstagram } from 'react-icons/fa'; // Importing GitHub and Instagram icons from React Icons
 
@@ -10,7 +11,7 @@ const Footer = () => {
         {/* Left Section */}
         <div className="md:w-1/4 mb-6 md:mb-0 flex flex-col items-start">
           {/* Insert white logo image */}
-          <img src="logo.png" alt="" />
+          {/* <img src="logo.png" alt="" /> */}
           <p>USA, California</p>
           <p>1800 123 4567</p>
           <a href="mailto:javaria.y2be@gmail.com" className="text-blue-400">

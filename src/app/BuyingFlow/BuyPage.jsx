@@ -62,7 +62,11 @@ const BuyPage = async ({shoeid}) => {
 
                             {/* Price Info */}
                             <div className="text-lg font-semibold">
+                                <Link href="/pages/buynow">
+                                <button>
                                 Buy Now For <span className="font-bold">${product?.ProductPrize}</span>
+                                </button>
+                                </Link>
                             </div>
 
                             {/* Buttons */}

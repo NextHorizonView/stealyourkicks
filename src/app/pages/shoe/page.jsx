@@ -14,7 +14,7 @@ const Page = () => {
     <>
       {/* BuyPage Section */}
       <div>
-        <p>PosId {id}</p>
+        {/* <p>PosId {id}</p> */}
         <BuyPage shoeid={id}/>
       </div>
 

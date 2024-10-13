@@ -5,7 +5,7 @@ const BuyNowDetails = ({ price, onClose }) => {
         <div className="bg-[#111B37] text-white p-6 rounded-lg shadow-lg max-w-md mx-auto">
             <div className="flex justify-between items-center">
                 <span className="text-sm bg-red-500 px-2 py-1 rounded">🔥 High Demand</span>
-                <span className="text-gray-400 text-sm">1397 people are interested in this product</span>
+            <span className="text-gray-400 text-sm">1397 people are interested in this product</span>
             </div>
             
             <div className="mt-4">

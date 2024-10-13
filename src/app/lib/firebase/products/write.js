@@ -11,7 +11,7 @@ export const addProduct = async (product) => {
         // Ensure that all sizes have valid names and stock
         const validatedSizes = product.ProductSize.map(size => ({
             SizeName: size.SizeName || "Unknown", // Use fallback if size name is missing
-            SizeStock: size.SizeStock ? Number(size.SizeStock) : 0, // Default stock to 0 if missing
+            SizeStock: size.SizeStocCustomk ? Number(size.SizeStock) : 0, // Default stock to 0 if missing
         }));
 
         await addDoc(collection(db, "Products"), {
@@ -20,6 +20,7 @@ export const addProduct = async (product) => {
             ProductPrize: product.ProductPrize,
             ProductTotalStock: product.ProductTotalStock, 
             ProductSize: validatedSizes,
+            ProductIsCoupon: product.hasCoupons
         });
     } catch (error) {
         console.error("Error adding product:", error);
@@ -49,6 +50,7 @@ export const updateProduct = async (product) => {
             ProductPrize: product.ProductPrize,
             ProductTotalStock: product.ProductTotalStock,
             ProductSize: validatedSizes,
+            ProductIsCoupon: product.hasCoupons
         });
     } catch (error) {
         console.error("Error updating product:", error.message);
