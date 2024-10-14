@@ -4,15 +4,17 @@ import { Sidebar, SidebarBody, SidebarLink } from "../ui/sidebar";
 import {
     IconArrowLeft,
     IconBrandTabler,
-    IconSettings,
+    IconSettings,   
     IconUserBolt,
 } from "@tabler/icons-react";
+import { RiAuctionFill } from "react-icons/ri";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import ProductManagement from "@/app/AdminFlow/ProductManagement";
 import UserManagement from "@/app/AdminFlow/UserManagement";
+import AuctionManagement from "@/app/AdminFlow/AuctionManagement";
 
 // Product management component
 // const ProductsSection = () => {
@@ -60,6 +62,14 @@ export function SidebarComp() {
             ),
             section: "coupons",  // Add a section key
         },
+        {
+            label: "Auction",
+            href: "#",
+            icon: (
+                <RiAuctionFill className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+            ),
+            section: "auction",  // Add a section key
+        },
     ];
 
     const [open, setOpen] = useState(false);
@@ -76,6 +86,8 @@ export function SidebarComp() {
                 return <UserManagement/> 
             case "coupons":
                 return <div className="p-6">Coupons Section</div>;
+            case "auction":
+                return <AuctionManagement/>
             default:
                 return <Dashboard />;  // Default content for dashboard
         }
@@ -84,7 +96,7 @@ export function SidebarComp() {
     return (
         <div
             className={cn(
-                "rounded-md flex flex-col md:flex-row  dark:bg-neutral-800 w-full flex-1 max-w-10xl border border-neutral-200 dark:border-neutral-700 h-screen"
+                "rounded-md flex flex-col md:flex-row  dark:bg-neutral-800 w-full flex-1 max-w-10xl  h-screen"
             )}
         >
             {/* Sidebar with links */}
@@ -103,7 +115,7 @@ export function SidebarComp() {
                         </div>
                     </div>
                     <div>
-                        <SidebarLink
+                        {/* <SidebarLink
                             link={{
                                 label:"Steal Your kicks",
                                 href: "#",
@@ -117,7 +129,7 @@ export function SidebarComp() {
                                     />
                                 ),
                             }}
-                        />
+                        /> */}
                     </div>
                 </SidebarBody>
             </Sidebar>
