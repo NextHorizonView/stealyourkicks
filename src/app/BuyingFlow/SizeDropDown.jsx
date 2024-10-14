@@ -1,30 +1,29 @@
 "use client";
 import React, { useState } from 'react';
 
-const SizeDropDown = ({ sizes }) => {
+const SizeDropDown = ({ sizes, onSizeSelect }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedSize, setSelectedSize] = useState(null);
-    console.log("Sized",sizes);
-    
-    // Function to toggle dropdown visibility
+
+    // Toggle dropdown visibility
     const toggleDropdown = () => setIsOpen(!isOpen);
 
-    // Function to select a size
+    // Handle size selection
     const selectSize = (size) => {
         setSelectedSize(size);
-        setIsOpen(false); // Close dropdown after selecting a size
+        onSizeSelect(size); // Notify parent about size selection
+        setIsOpen(false); // Close dropdown
     };
 
-    // Function to handle cancellation
+    // Handle cancel action
     const handleCancel = () => {
-        setIsOpen(false); // Close dropdown without making a selection
+        setIsOpen(false); // Close dropdown without selection
     };
 
-    // Function to handle proceed action
+    // Handle proceed action
     const handleProceed = () => {
         if (selectedSize) {
             console.log(`Proceeding with size: ${selectedSize.SizeName}`);
-            // Add your proceed logic here (e.g., navigate to another page or update a parent component)
         }
     };
 
@@ -43,7 +42,7 @@ const SizeDropDown = ({ sizes }) => {
             {isOpen && (
                 <div className="absolute mt-2 bg-white border border-gray-400 rounded w-full z-10 p-4">
                     <h3 className="text-gray-800 text-sm mb-2">Select Size</h3>
-                    
+
                     {/* Sizes in grid layout */}
                     <div className="grid grid-cols-4 gap-2">
                         {sizes?.map((size, index) => (
@@ -56,19 +55,25 @@ const SizeDropDown = ({ sizes }) => {
                                         : 'bg-gray-200 text-gray-800'
                                 }`}
                             >
-                                {size.SizeName} {/* Display size name */}
+                                {size.SizeName}
                                 <br />
-                                <small className="text-xs">Stock: {size.SizeStock}</small> {/* Display size stock */}
+                                <small className="text-xs">Stock: {size.SizeStock}</small>
                             </button>
                         ))}
                     </div>
 
                     {/* Action buttons */}
                     <div className="flex justify-between mt-4">
-                        <button onClick={handleCancel} className="bg-white text-gray-600 border border-gray-400 px-4 py-2 rounded">
+                        <button
+                            onClick={handleCancel}
+                            className="bg-white text-gray-600 border border-gray-400 px-4 py-2 rounded"
+                        >
                             Cancel
                         </button>
-                        <button onClick={handleProceed} className="bg-blue-500 text-white px-4 py-2 rounded">
+                        <button
+                            onClick={handleProceed}
+                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                        >
                             Proceed
                         </button>
                     </div>

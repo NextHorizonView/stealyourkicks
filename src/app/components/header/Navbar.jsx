@@ -9,7 +9,7 @@ import { useAuth } from "@/app/lib/contexts/AuthContext";
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
-    const { user, isLoading } = useAuth();
+    const { user, isLoading, handleLogout } = useAuth();
 
     const profileRef = useRef(null);
 
@@ -20,7 +20,10 @@ const Navbar = () => {
     const toggleProfileMenu = () => {
         setIsProfileOpen(!isProfileOpen);
     };
-
+    const handleSignout = async() =>
+    {
+        await handleLogout("/");
+    }
     const handleClickOutside = (event) => {
         if (profileRef.current && !profileRef.current.contains(event.target)) {
             setIsProfileOpen(false);
@@ -89,8 +92,10 @@ const Navbar = () => {
                                         <Link href="/pages/profile" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
                                             Profile
                                         </Link>
-                                        <Link href="/pages/logout" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
+                                        <Link href="" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
+                                           <button onClick={handleSignout}>
                                             Logout
+                                           </button>
                                         </Link>
                                     </>
                                 )}

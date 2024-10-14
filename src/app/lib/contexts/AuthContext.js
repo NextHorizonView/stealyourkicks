@@ -8,39 +8,47 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // Use Next.js router
+import { useRouter } from "next/navigation"; // Next.js router
 import { auth, db } from "../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore"; // Import setDoc for creating users
 
-// Create an AuthContext
 const AuthContext = createContext();
 
-// AuthContextProvider component
 export default function AuthContextProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Start as true, since we are waiting for Firebase response
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const router = useRouter(); // Next.js router
+  const router = useRouter();
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUser(user);
       } else {
         setUser(null);
       }
-      setIsLoading(false); // Stop loading once we get the response
+      setIsLoading(false);
     });
-
-    return () => unsub(); // Clean up listener on unmount
+    return () => unsub();
   }, []);
+
+  // Helper to create user document
+  const createUserDoc = async (user) => {
+    const userDocRef = doc(db, "Users", user.uid);
+    await setDoc(userDocRef, {
+      email: user.email,
+      uid: user.uid,
+      createdAt: new Date(),
+    });
+  };
 
   const handleSignInWithGoogle = async (redirectPath = "/dashboard") => {
     setIsLoading(true);
-    setError(null); // Reset error before attempting sign-in
+    setError(null);
     try {
-      await signInWithPopup(auth, new GoogleAuthProvider());
-      router.push(redirectPath); // Navigate to a specific route after login
+      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      await createUserDoc(result.user); // Create user document
+      router.push(redirectPath);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -48,54 +56,49 @@ export default function AuthContextProvider({ children }) {
     }
   };
 
-  const handleSignUpWithEmail = async (email, password, redirectPath ) => {
+  const handleSignUpWithEmail = async (email, password, redirectPath) => {
     setIsLoading(true);
     setError(null);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      router.push(redirectPath); // Navigate to a specific route after signup
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      await createUserDoc(result.user); // Create user document
+      router.push(redirectPath);
     } catch (error) {
       setError(error.message);
     } finally {
       setIsLoading(false);
     }
   };
-  const handleSignInWithEmail = async (email, password,path) => {
+
+  const handleSignInWithEmail = async (email, password, path) => {
     setIsLoading(true);
     setError(null);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push(path); // Navigate after successful login
+      router.push(path);
     } catch (error) {
-      console.error("Error during sign-in:", error); // Log error for debugging
-      setError(error.message); // Display error to the user
+      setError(error.message);
     } finally {
       setIsLoading(false);
     }
   };
+
   const handleAdminSignInWithEmail = async (email, password, path) => {
     setIsLoading(true);
     setError(null);
     try {
-      // Step 1: Sign in the user with email and password
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const userId = userCredential.user.uid;
-      console.log("UserId:",);
-      
-      // Step 2: Check if the user is an admin in Firestore
-      const adminDocRef = doc(db, "Admins", userId); // Assuming "Admins" collection has user UIDs as doc IDs
+      const adminDocRef = doc(db, "Admins", userId);
       const adminDoc = await getDoc(adminDocRef);
-  
+
       if (adminDoc.exists()) {
-        // Step 3: If the user is an admin, navigate to the admin dashboard or path
-        router.push(path); // Redirect to the provided path, such as an admin dashboard
+        router.push(path); // Admin access granted
       } else {
-        // Step 4: If the user is not an admin, show an error or redirect them
         setError("You are not authorized to access the admin panel.");
       }
     } catch (error) {
-      console.error("Error during sign-in:", error); // Log error for debugging
-      setError(error.message); // Display error to the user
+      setError(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -106,7 +109,7 @@ export default function AuthContextProvider({ children }) {
     setError(null);
     try {
       await signOut(auth);
-      router.push(redirectPath); // Navigate to a specific route after logout
+      router.push(redirectPath);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -132,20 +135,12 @@ export default function AuthContextProvider({ children }) {
   );
 }
 
-// Loading screen with a blinking logo
-const LoadingScreen = () => {
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="animate-pulse">
-        <img
-          src="/logo.png" // Replace this with the path to your logo
-          alt="Logo"
-          className="h-16 w-16"
-        />
-      </div>
+const LoadingScreen = () => (
+  <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="animate-pulse">
+      <img src="/logo.png" alt="Logo" className="h-16 w-16" />
     </div>
-  );
-};
+  </div>
+);
 
-// Custom hook to use the AuthContext
 export const useAuth = () => useContext(AuthContext);

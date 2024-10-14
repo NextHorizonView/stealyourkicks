@@ -1,6 +1,4 @@
-import React from 'react';
-// import logo from 'logo.png'; 
-
+import React from 'react'; 
 import Image from 'next/image'; // Next.js Image component
 import { FaGithub, FaInstagram } from 'react-icons/fa'; // Importing GitHub and Instagram icons from React Icons
 
