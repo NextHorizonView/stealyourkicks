@@ -1,15 +1,20 @@
-import React from 'react';
+
+'use client'
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/app/components/header/Navbar'; // Ensure correct casing
 import SizeDropDown from './SizeDropDown';
 import { BuyPageCard } from '../components/cards/BuyPageCard';
 
-const BiddingDetails = () => {
+const AuctionPage = () => {
+    const [selectedAddress, setSelectedAddress] = useState('');
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+
     return (
         <>
             <Navbar />
             <div className='flex flex-col lg:flex-row justify-center lg:space-x-10 space-y-5 lg:space-y-0 py-10 px-5'>
-                {/* Product Card Section */}
+                {/* Product Card Section (Shoe Card) */}
                 <div className="w-full lg:w-1/3 flex justify-center lg:justify-start">
                     <BuyPageCard />
                 </div>
@@ -22,7 +27,7 @@ const BiddingDetails = () => {
                     {/* Size Dropdown */}
                     <SizeDropDown />
 
-                    {/* Average Sale Price and Buy Now Price */}
+                    {/* Pricing Options */}
                     <div className="flex flex-col md:flex-row justify-between mt-4 bg-white p-5 rounded shadow space-y-4 md:space-y-0">
                         <div className="w-full md:w-1/2 pr-0 md:pr-2">
                             <div className="text-gray-500">Avg Sale Price</div>
@@ -44,28 +49,37 @@ const BiddingDetails = () => {
                         />
                     </div>
 
-                    {/* Bid Expiration Input */}
+                    {/* Address Dropdown */}
                     <div className="mt-4">
-                        <input
-                            type="text"
-                            placeholder="Bid Expiration"
-                            className="w-full border border-gray-300 px-4 py-3 rounded"
-                        />
+                        <label className="text-gray-500 block mb-2">Select Address</label>
+                        <select
+                            value={selectedAddress}
+                            onChange={(e) => setSelectedAddress(e.target.value)}
+                            className="w-full border border-gray-300 px-4 py-3 rounded text-lg"
+                        >
+                            <option value="">Select an address</option>
+                            <option value="123 Baker's Street, London">123 Baker's Street, London</option>
+                            <option value="456 Oxford Avenue, New York">456 Oxford Avenue, New York</option>
+                        </select>
+                        <Link href="/pages/addressdetails">
+                            <button className="text-blue-500 mt-3">Add New Address</button>
+                        </Link>
                     </div>
 
-                    {/* Add Address and Payment Method */}
-                    <div className="space-y-3 mt-4">
-                        <Link href="/pages/addressdetails">
-                            <div className="flex justify-between items-center border border-gray-300 px-4 py-3 rounded">
-                                <span>Add Address</span>
-                                <button className="text-blue-500">Add</button>
-                            </div></Link>
-
+                    {/* Payment Method Dropdown */}
+                    <div className="mt-4">
+                        <label className="text-gray-500 block mb-2">Select Payment Method</label>
+                        <select
+                            value={selectedPaymentMethod}
+                            onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                            className="w-full border border-gray-300 px-4 py-3 rounded text-lg"
+                        >
+                            <option value="">Select a payment method</option>
+                            <option value="Credit Card">Credit Card</option>
+                            <option value="PayPal">PayPal</option>
+                        </select>
                         <Link href="/pages/paymentdetails">
-                        <div className="flex justify-between items-center border border-gray-300 px-4 py-3 rounded">
-                            <span>Add Payment Method</span>
-                            <button className="text-blue-500">Add</button>
-                        </div>
+                            <button className="text-blue-500 mt-3">Add Payment Method</button>
                         </Link>
                     </div>
 
@@ -82,6 +96,6 @@ const BiddingDetails = () => {
             </div>
         </>
     );
-}
+};
 
-export default BiddingDetails;
+export default AuctionPage;
