@@ -12,16 +12,22 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AiOutlineShoppingCart } from 'react-icons/ai'; // Shopping cart icon
 import { AiOutlineShopping } from 'react-icons/ai'; // Outlined Buy icon
 import { useProducts } from "@/app/lib/firebase/products/read";
+import { addProductToCart } from "@/app/lib/firebase/cart/write";
+import { useAuth } from "@/app/lib/contexts/AuthContext";
 
 export function HomePageCards() {
     const [cart, setCart] = useState([]);
     const { data, error, isLoading } = useProducts();
-    const addToCart = (shoe) => {
-        setCart((prevCart) => [...prevCart, shoe]);
-        toast.success(`${shoe.name} added to cart!`, {
-            position: "bottom-right",
-            autoClose: 2000,
-        });
+    const {user} = useAuth();
+    const addToCart =async (shoe) => {
+        // setCart((prevCart) => [...prevCart, shoe]);
+        console.log("Shoe", shoe);
+        
+        await addProductToCart(user.uid,shoe);
+        // toast.success(`${shoe.name} added to cart!`, {
+        //     position: "bottom-right",
+        //     autoClose: 2000,
+        // });
     };
     if (isLoading) {
         return <div>Loading...</div>; // Handle loading state
