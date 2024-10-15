@@ -76,7 +76,7 @@ export function HomePageCards() {
                             {/* Add to Cart Icon */}
                             <button
                                 onClick={() => addToCart(shoe)}
-                                className="text-xl text-indigo-600 hover:text-indigo-700"
+                                 className="text-xl text-indigo-600 hover:text-indigo-700"
                                 aria-label="Add to cart"
                             >
                                 <AiOutlineShoppingCart />

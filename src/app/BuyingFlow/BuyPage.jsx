@@ -5,6 +5,7 @@ import Navbar from '../components/header/Navbar';
 import SizeDropDown from './SizeDropDown';
 import Link from 'next/link';
 import { getProducts } from "@/app/lib/firebase/products/read";
+import { addProductToAuction } from '../lib/firebase/auction/write';
 
 const BuyPage = ({ shoeid }) => {
     const [product, setProduct] = useState(null);
@@ -23,7 +24,10 @@ const BuyPage = ({ shoeid }) => {
     if (!product) {
         return <div>Loading...</div>; // Show loading state if product data isn't loaded yet
     }
-
+    const handleAuction=async ()=>
+    {
+        await addProductToAuction(product,selectedSize?.SizeName);
+    }
     return (
         <>
             <Navbar />
@@ -52,8 +56,8 @@ const BuyPage = ({ shoeid }) => {
                         </div>
 
                         <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
-                            <Link href="/pages/biddingdetails">
-                                <button className="bg-black text-white font-bold py-2 px-4 rounded w-full">
+                            <Link href={`/pages/auction/?id=${product.ProductId}&size=${selectedSize?.SizeName || ''}`}>
+                                <button className="bg-black text-white font-bold py-2 px-4 rounded w-full" onClick={handleAuction}>
                                     Place Bid
                                 </button>
                             </Link>

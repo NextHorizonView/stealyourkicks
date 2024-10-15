@@ -20,7 +20,6 @@ const withAdminAuth = (Component) => {
         }
       }
     }, [user, isLoading, router]);
-
     if (isLoading) {
       return <div>Loading...</div>;
     }
