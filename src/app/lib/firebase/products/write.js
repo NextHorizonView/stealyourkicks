@@ -1,4 +1,4 @@
-import { addDoc, collection, updateDoc, doc } from "firebase/firestore";
+import { addDoc, collection, updateDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase"; // Import Firestore instance
 
 // Function to add a new product with sizes
@@ -11,10 +11,11 @@ export const addProduct = async (product) => {
         // Ensure that all sizes have valid names and stock
         const validatedSizes = product.ProductSize.map(size => ({
             SizeName: size.SizeName || "Unknown", // Use fallback if size name is missing
-            SizeStock: size.SizeStocCustomk ? Number(size.SizeStock) : 0, // Default stock to 0 if missing
+            SizeStock: size.SizeStock ? Number(size.SizeStock) : 0, // Default stock to 0 if missing
         }));
 
-        await addDoc(collection(db, "Products"), {
+        // Add the product to Firestore and get the document reference
+        const productRef = await addDoc(collection(db, "Products"), {
             ProductName: product.ProductName,
             ProductImage: product.ProductImage,
             ProductPrize: product.ProductPrize,
@@ -22,6 +23,12 @@ export const addProduct = async (product) => {
             ProductSize: validatedSizes,
             ProductIsCoupon: product.hasCoupons
         });
+
+        // Update the document with the ProductId (document ID)
+        await updateDoc(doc(db, "Products", productRef.id), {
+            ProductId: productRef.id,
+        });
+
     } catch (error) {
         console.error("Error adding product:", error);
         throw error;
@@ -58,4 +65,35 @@ export const updateProduct = async (product) => {
     }
 };
 
+export const updateProductStock = async (productId, sizeName, newStock) => {
+    try {
+        // Reference to the product document
+        const productRef = doc(db, "Products", productId);
+        
+        // Retrieve the current product document
+        const productDoc = await getDoc(productRef);
+        if (!productDoc.exists()) {
+            throw new Error("Product not found");
+        }
 
+        // Get the current ProductSize array
+        const productData = productDoc.data();
+        const currentSizes = productData.ProductSize || [];
+
+        // Update the stock for the specific size
+        const updatedSizes = currentSizes.map(size => {
+            if (size.SizeName === sizeName) {
+                return { ...size, SizeStock: newStock }; // Update the size stock
+            }
+            return size; // Keep other sizes unchanged
+        });
+
+        // Update the product document with the new ProductSize array
+        await updateDoc(productRef, {
+            ProductSize: updatedSizes
+        });
+    } catch (error) {
+        console.error("Error updating product stock:", error);
+        throw error;
+    }
+};

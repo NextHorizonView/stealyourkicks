@@ -1,244 +1,265 @@
 "use client";
+import React, { useState, useEffect } from "react";
+import { db } from "../lib/firebase";
+import { 
+  collection, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
+  doc 
+} from "firebase/firestore"; 
+import { useAuction } from "../lib/firebase/auction/read";
 
-import React, { useState } from "react";
+const initialAuctionState = {
+  ProductName: "",
+  ProductImage: "",
+  ProductPrize: "",
+  ProductTotalStock: "",
+  StartTime: "",
+  EndTime: "",
+  CurrentHighestBid: {
+    BidAmount: 0,
+    BidderID: null,
+  },
+  BidHistory: [],
+  Winner: null,
+};
 
 const AuctionManagement = () => {
-  const [newAuction, setNewAuction] = useState({
-    auctionName: "",
-    auctionImage: "",
-    startingPrice: "",
-    auctionTime: 0, // in minutes
-    bidders: [], // Later to be populated with bidder data
-    winner: null, // Will hold the winner's information
-  });
+  const { data: auctions, error, isLoading } = useAuction();
+  const [newAuction, setNewAuction] = useState(initialAuctionState);
+  const [editingAuction, setEditingAuction] = useState(null); // Track editing state
 
-  const [auctions, setAuctions] = useState([]);
-  const [editingAuction, setEditingAuction] = useState(null);
+  // Handle adding a new auction
+  const handleAddAuction = async () => {
+    try {
+      await addDoc(collection(db, "Auctions"), {
+        ProductDetails: {
+          ProductName: newAuction.ProductName,
+          ProductImage: newAuction.ProductImage,
+          ProductPrize: newAuction.ProductPrize,
+          ProductTotalStock: newAuction.ProductTotalStock,
+        },
+        AuctionDetails: {
+          StartTime: newAuction.StartTime,
+          EndTime: newAuction.EndTime,
+          CurrentHighestBid: newAuction.CurrentHighestBid,
+          BidHistory: newAuction.BidHistory,
+          Winner: newAuction.Winner,
+        },
+      });
+      setNewAuction(initialAuctionState);
+    } catch (error) {
+      console.error("Error adding auction:", error);
+    }
+  };
 
-  // Function to add a new auction
-  const handleAddAuction = () => {
-    setAuctions([...auctions, newAuction]);
+  // Handle editing an auction
+  const handleEditAuction = (auction) => {
+    setEditingAuction(auction);
     setNewAuction({
-      auctionName: "",
-      auctionImage: "",
-      startingPrice: "",
-      auctionTime: 0,
-      bidders: [],
-      winner: null,
+      ProductName: auction.ProductDetails.ProductName,
+      ProductImage: auction.ProductDetails.ProductImage,
+      ProductPrize: auction.ProductDetails.ProductPrize,
+      ProductTotalStock: auction.ProductDetails.ProductTotalStock,
+      StartTime: auction.AuctionDetails.StartTime, // Populate StartTime
+      EndTime: auction.AuctionDetails.EndTime,     // Populate EndTime
+      CurrentHighestBid: auction.AuctionDetails.CurrentHighestBid,
+      BidHistory: auction.AuctionDetails.BidHistory,
+      Winner: auction.AuctionDetails.Winner,
     });
   };
 
-  // Function to handle editing an auction
-  const handleEditAuction = (auction) => {
-    setEditingAuction(auction);
+  const handleUpdateAuction = async () => {
+    try {
+      const auctionRef = doc(db, "Auctions", editingAuction.id);
+      await updateDoc(auctionRef, {
+        ProductDetails: {
+          ProductName: newAuction.ProductName,
+          ProductImage: newAuction.ProductImage,
+          ProductPrize: newAuction.ProductPrize,
+          ProductTotalStock: newAuction.ProductTotalStock,
+        },
+        AuctionDetails: {
+          StartTime: newAuction.StartTime,
+          EndTime: newAuction.EndTime,
+          CurrentHighestBid: newAuction.CurrentHighestBid,
+          BidHistory: newAuction.BidHistory,
+          Winner: newAuction.Winner,
+        },
+      });
+      setEditingAuction(null);
+      setNewAuction(initialAuctionState);
+    } catch (error) {
+      console.error("Error updating auction:", error);
+    }
   };
 
-  // Function to save the edited auction
-  const handleSaveEditedAuction = () => {
-    setAuctions((prev) =>
-      prev.map((a) => (a === editingAuction ? editingAuction : a))
+  // Handle selecting the highest bidder as the winner
+  const handleConfirmWinner = async (auction) => {
+    const highestBidder = getHighestBidder(auction.AuctionDetails.BidHistory);
+    if (!highestBidder) return alert("No bids available to select a winner!");
+
+    try {
+      const auctionRef = doc(db, "Auctions", auction.id);
+      await updateDoc(auctionRef, {
+        "AuctionDetails.Winner": highestBidder.BidderID,
+      });
+    } catch (error) {
+      console.error("Error confirming winner:", error);
+    }
+  };
+
+  // Helper function to get the highest bidder from the BidHistory
+  const getHighestBidder = (bidHistory) => {
+    if (!bidHistory || bidHistory.length === 0) return null;
+
+    const highestBid = bidHistory.reduce((max, bid) =>
+      bid.BidAmount > max.BidAmount ? bid : max
     );
-    setEditingAuction(null);
+
+    return highestBid; // { BidderID: 'Odur...', BidAmount: 110000 }
   };
 
-  // Function to confirm a winner for an auction
-  const handleConfirmWinner = (auction, winner) => {
-    setAuctions((prev) =>
-      prev.map((a) => (a === auction ? { ...a, winner: winner } : a))
-    );
+  // Handle deleting an auction
+  const handleDeleteAuction = async (auctionId) => {
+    try {
+      await deleteDoc(doc(db, "Auctions", auctionId));
+    } catch (error) {
+      console.error("Error deleting auction:", error);
+    }
   };
 
-  // Function to delete an auction
-  const handleDeleteAuction = (auctionToDelete) => {
-    setAuctions(auctions.filter((auction) => auction !== auctionToDelete));
-  };
+  if (isLoading) return <p>Loading auctions...</p>;
+  if (error) return <p>Error loading auctions: {error}</p>;
 
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Auction Management</h2>
 
-      {/* Add New Auction */}
+      {/* Add or Edit Auction */}
       <div className="mb-10">
-        <h3 className="text-xl font-semibold">Add New Auction</h3>
+        <h3 className="text-xl font-semibold">
+          {editingAuction ? "Edit Auction" : "Add New Auction"}
+        </h3>
         <div className="flex flex-col gap-2">
           <input
             type="text"
-            value={newAuction.auctionName}
+            value={newAuction.ProductName}
             onChange={(e) =>
-              setNewAuction({ ...newAuction, auctionName: e.target.value })
+              setNewAuction({ ...newAuction, ProductName: e.target.value })
             }
             className="border p-2 rounded"
-            placeholder="Auction Name"
+            placeholder="Product Name"
           />
           <input
             type="text"
-            value={newAuction.auctionImage}
+            value={newAuction.ProductImage}
             onChange={(e) =>
-              setNewAuction({ ...newAuction, auctionImage: e.target.value })
+              setNewAuction({ ...newAuction, ProductImage: e.target.value })
             }
             className="border p-2 rounded"
-            placeholder="Auction Image URL"
+            placeholder="Product Image URL"
           />
           <input
             type="number"
-            value={newAuction.startingPrice}
+            value={newAuction.ProductPrize}
             onChange={(e) =>
-              setNewAuction({ ...newAuction, startingPrice: e.target.value })
+              setNewAuction({ ...newAuction, ProductPrize: e.target.value })
             }
             className="border p-2 rounded"
-            placeholder="Starting Price"
+            placeholder="Product Prize"
           />
           <input
             type="number"
-            value={newAuction.auctionTime}
+            value={newAuction.ProductTotalStock}
             onChange={(e) =>
-              setNewAuction({ ...newAuction, auctionTime: e.target.value })
+              setNewAuction({ ...newAuction, ProductTotalStock: e.target.value })
             }
             className="border p-2 rounded"
-            placeholder="Auction Time (minutes)"
+            placeholder="Total Stock"
+          />
+          <input
+            type="datetime-local"
+            value={newAuction.StartTime}
+            onChange={(e) =>
+              setNewAuction({ ...newAuction, StartTime: e.target.value })
+            }
+            className="border p-2 rounded"
+            placeholder="Start Time"
+          />
+          <input
+            type="datetime-local"
+            value={newAuction.EndTime}
+            onChange={(e) =>
+              setNewAuction({ ...newAuction, EndTime: e.target.value })
+            }
+            className="border p-2 rounded"
+            placeholder="End Time"
           />
           <button
-            onClick={handleAddAuction}
+            onClick={editingAuction ? handleUpdateAuction : handleAddAuction}
             className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
           >
-            Add Auction
+            {editingAuction ? "Update Auction" : "Add Auction"}
           </button>
         </div>
       </div>
 
       {/* Display Auctions */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {auctions.map((auction, index) => (
+        {auctions.map((auction) => (
           <div
-            key={index}
+            key={auction.id}
             className="p-4 bg-gray-100 dark:bg-neutral-800 rounded-lg shadow-md"
           >
             <img
-              src={auction.auctionImage}
-              alt={auction.auctionName}
+              src={auction.ProductDetails.ProductImage}
+              alt={auction.ProductDetails.ProductName}
               className="w-full h-48 object-cover rounded-lg"
             />
             <div className="mt-4">
-              <h3 className="font-bold text-xl">{auction.auctionName}</h3>
+              <h3 className="font-bold text-xl">
+                {auction.ProductDetails.ProductName}
+              </h3>
               <p className="text-gray-600 dark:text-gray-300">
-                Starting Price: {auction.startingPrice}
+                Prize: {auction.ProductDetails.ProductPrize}
               </p>
-              <p className="text-gray-600 dark:text-gray-300">
-                Time: {auction.auctionTime} minutes
-              </p>
+              <p>Start: {auction.AuctionDetails.StartTime}</p>
+              <p>End: {auction.AuctionDetails.EndTime}</p>
 
-              {auction.winner ? (
+              {auction.AuctionDetails.Winner ? (
                 <p className="text-green-500 font-semibold">
-                  Winner: {auction.winner}
+                  Winner: {auction.AuctionDetails.Winner}
                 </p>
               ) : (
                 <p className="text-red-500 font-semibold">No winner yet</p>
               )}
 
-              <div className="flex gap-2 mt-4">
+              <div className="mt-4">
+                <button
+                  onClick={() => handleConfirmWinner(auction)}
+                  className="bg-green-500 text-white px-4 py-2 rounded"
+                >
+                  Confirm Winner
+                </button>
                 <button
                   onClick={() => handleEditAuction(auction)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  className="bg-yellow-500 text-white px-4 py-2 rounded ml-2"
                 >
                   Edit
                 </button>
-
                 <button
-                  onClick={() => handleDeleteAuction(auction)}
-                  className="bg-red-500 text-white px-4 py-2 rounded"
+                  onClick={() => handleDeleteAuction(auction.id)}
+                  className="bg-red-500 text-white px-4 py-2 rounded ml-2"
                 >
                   Delete
                 </button>
               </div>
-
-              {!auction.winner && (
-                <div className="mt-4">
-                  <input
-                    type="text"
-                    placeholder="Enter winner name"
-                    onChange={(e) =>
-                      setEditingAuction({ ...auction, winner: e.target.value })
-                    }
-                    className="border p-2 rounded mb-2"
-                  />
-                  <button
-                    onClick={() =>
-                      handleConfirmWinner(auction, editingAuction?.winner)
-                    }
-                    className="bg-green-500 text-white px-4 py-2 rounded"
-                  >
-                    Confirm Winner
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         ))}
       </div>
-
-      {/* Edit Auction */}
-      {editingAuction && (
-        <div className="mb-10">
-          <h3 className="text-xl font-semibold">Edit Auction</h3>
-          <div className="flex flex-col gap-2">
-            <input
-              type="text"
-              value={editingAuction.auctionName}
-              onChange={(e) =>
-                setEditingAuction({
-                  ...editingAuction,
-                  auctionName: e.target.value,
-                })
-              }
-              className="border p-2 rounded"
-              placeholder="Auction Name"
-            />
-            <input
-              type="text"
-              value={editingAuction.auctionImage}
-              onChange={(e) =>
-                setEditingAuction({
-                  ...editingAuction,
-                  auctionImage: e.target.value,
-                })
-              }
-              className="border p-2 rounded"
-              placeholder="Auction Image URL"
-            />
-            <input
-              type="number"
-              value={editingAuction.startingPrice}
-              onChange={(e) =>
-                setEditingAuction({
-                  ...editingAuction,
-                  startingPrice: e.target.value,
-                })
-              }
-              className="border p-2 rounded"
-              placeholder="Starting Price"
-            />
-            <input
-              type="number"
-              value={editingAuction.auctionTime}
-              onChange={(e) =>
-                setEditingAuction({
-                  ...editingAuction,
-                  auctionTime: e.target.value,
-                })
-              }
-              className="border p-2 rounded"
-              placeholder="Auction Time (minutes)"
-            />
-
-            <button
-              onClick={handleSaveEditedAuction}
-              className="bg-green-500 text-white px-4 py-2 rounded mt-2"
-            >
-              Save Auction
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

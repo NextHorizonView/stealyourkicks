@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import ProductManagement from "@/app/AdminFlow/ProductManagement";
 import UserManagement from "@/app/AdminFlow/UserManagement";
 import AuctionManagement from "@/app/AdminFlow/AuctionManagement";
+import OrderManagement from "@/app/AdminFlow/OrderMangement";
 
 // Product management component
 // const ProductsSection = () => {
@@ -81,7 +82,7 @@ export function SidebarComp() {
             case "products":
                 return <ProductManagement/>;  // Render the product section when active
             case "orders":
-                return <UserManagement/>
+                return <OrderManagement/>
             case "userManagement":
                 return <UserManagement/> 
             case "coupons":
