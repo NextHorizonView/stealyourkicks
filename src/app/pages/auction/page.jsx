@@ -1,6 +1,6 @@
 import { AuctionCard } from '@/app/AuctionFlow/AuctionCards'
+import Footer from '@/app/components/Footer/Footer'
 import Navbar from '@/app/components/header/Navbar'
-import Footer from "../../components/Footer/Footer"
 import React from 'react'
 
 const page = () => {
