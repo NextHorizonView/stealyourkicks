@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "../ui/sidebar";
 import {
     IconArrowLeft,
@@ -17,6 +17,8 @@ import UserManagement from "@/app/AdminFlow/UserManagement";
 import AuctionManagement from "@/app/AdminFlow/AuctionManagement";
 import OrderManagement from "@/app/AdminFlow/OrderMangement";
 import ChartComponent from "../admin/Chart";
+import { collection, getCountFromServer } from "firebase/firestore";
+import { db } from "@/app/lib/firebase";
 
 // Product management component
 // const ProductsSection = () => {
@@ -30,6 +32,12 @@ import ChartComponent from "../admin/Chart";
 // };
 
 export function SidebarComp() {
+    const [data, setData] = useState({
+        totalOrders: 0,
+        totalUsers: 0,
+        totalProducts: 0,
+        totalAuctions: 0,
+      });
     // Links for the sidebar
     const links = [
         {
@@ -81,7 +89,29 @@ export function SidebarComp() {
             section: "dashboard",  // Add a section key
         },
     ];
-
+    useEffect(() => {
+        // Fetch your totals from Firestore
+        const fetchData = async () => {
+          try {
+            const ordersCount = await getCountFromServer(collection(db, 'Orders'));
+            const usersCount = await getCountFromServer(collection(db, 'Users'));
+            const productsCount = await getCountFromServer(collection(db, 'Products'));
+            const auctionsCount = await getCountFromServer(collection(db, 'Auctions'));
+    
+            setData({
+              totalOrders: ordersCount.data().count,
+              totalUsers: usersCount.data().count,
+              totalProducts: productsCount.data().count,
+              totalAuctions: auctionsCount.data().count,
+            });
+          } catch (error) {
+            console.error("Error fetching totals:", error);
+          }
+        };
+        
+        fetchData();
+      }, []);
+    
     const [open, setOpen] = useState(false);
     const [activeSection, setActiveSection] = useState("dashboard");  // State to track the active section
 
@@ -99,7 +129,7 @@ export function SidebarComp() {
             case "auction":
                 return <AuctionManagement/>
             case "dashboard":
-                return <ChartComponent/>
+                return <ChartComponent data={data}/>
             default:
                 return <Dashboard />;  // Default content for dashboard
         }
@@ -186,25 +216,13 @@ export const LogoIcon = () => {
 // Dummy dashboard component for default content
 const Dashboard = () => {
     return (
-        <div className="flex flex-1">
-            <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full">
-                <div className="flex gap-2">
-                    {[...new Array(4)].map((_, i) => (
-                        <div
-                            key={"first-array" + i}
-                            className="h-20 w-full rounded-lg  dark:bg-neutral-800 animate-pulse"
-                        ></div>
-                    ))}
-                </div>
-                <div className="flex gap-2 flex-1">
-                    {[...new Array(2)].map((_, i) => (
-                        <div
-                            key={"second-array" + i}
-                            className="h-full w-full rounded-lg  dark:bg-neutral-800 animate-pulse"
-                        ></div>
-                    ))}
-                </div>
-            </div>
+        <div className="flex">
+        {/* <SidebarComp /> */}
+        <div className="flex-1 p-6">
+          <h2 className="text-2xl font-bold mb-4">Admin Dashboard</h2>
+          {/* Render the ChartComponent */}
+          {/* <ChartComponent data={data} /> */}
         </div>
+      </div>
     );
 };

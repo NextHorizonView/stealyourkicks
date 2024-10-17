@@ -127,7 +127,7 @@ const ProductManagement = () => {
 
                             {/* Display if product has coupons */}
                             <p className="text-gray-600 dark:text-gray-300">
-                                Coupons Available: {product.hasCoupons ? "Yes" : "No"}
+                                Coupons Available: {product.ProductIsCoupon ? "Yes" : "No"}
                             </p>
 
                             <button
@@ -210,8 +210,8 @@ const ProductManagement = () => {
                         <label className="mt-2">
                             <input
                                 type="checkbox"
-                                checked={editingProduct.hasCoupons}
-                                onChange={(e) => setEditingProduct({ ...editingProduct, hasCoupons: e.target.checked })}
+                                checked={editingProduct.ProductIsCoupon}
+                                onChange={(e) => setEditingProduct({ ...editingProduct, ProductIsCoupon: e.target.checked })}
                             />
                             {" "}Product Coupons
                         </label>
@@ -283,8 +283,8 @@ const ProductManagement = () => {
                     <label className="mt-2">
                         <input
                             type="checkbox"
-                            checked={newProduct.hasCoupons}
-                            onChange={(e) => setNewProduct({ ...newProduct, hasCoupons: e.target.checked })}
+                            checked={newProduct.ProductIsCoupon}
+                            onChange={(e) => setNewProduct({ ...newProduct, ProductIsCoupon: e.target.checked })}
                         />
                         {" "}Product Coupons
                     </label>

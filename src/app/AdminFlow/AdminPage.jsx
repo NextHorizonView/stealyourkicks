@@ -41,11 +41,11 @@ const AdminPage = () => {
   return (
     <div className="flex">
       <SidebarComp />
-      <div className="flex-1 p-6">
+      {/* <div className="flex-1 p-6">
         <h2 className="text-2xl font-bold mb-4">Admin Dashboard</h2>
         {/* Render the ChartComponent */}
-        <ChartComponent data={data} />
-      </div>
+        {/* <ChartComponent data={data} /> */}
+      {/* </div> */} 
     </div>
   );
 };

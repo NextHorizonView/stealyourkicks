@@ -1,5 +1,5 @@
 import { AuctionCard } from '@/app/AuctionFlow/AuctionCards'
-import Footer from '../../components/Footer/Footer'
+import Footer from '@/app/components/Footer/Footer'
 import Navbar from '@/app/components/header/Navbar'
 import React from 'react'
 
@@ -10,7 +10,7 @@ const page = () => {
         <Navbar/>
         <AuctionCard/>
         <Footer/>
-        </div>
+    </div>
   )
 }
 export default page

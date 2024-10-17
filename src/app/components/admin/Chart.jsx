@@ -36,6 +36,7 @@ const ChartComponent = ({ data = { totalOrders: 0, totalUsers: 0, totalProducts:
 
   return (
     <div className="bg-white p-4 rounded shadow">
+       <h2 className="text-2xl font-bold mb-4 items-center">Admin Dashboard</h2>
       <Bar data={chartData} options={options} />
     </div>
   );
