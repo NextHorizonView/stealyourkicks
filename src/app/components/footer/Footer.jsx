@@ -1,5 +1,4 @@
-import React from 'react'; 
-import Image from 'next/image'; // Next.js Image component
+import React from 'react';  // Next.js Image component
 import { FaGithub, FaInstagram } from 'react-icons/fa'; // Importing GitHub and Instagram icons from React Icons
 
 const Footer = () => {
