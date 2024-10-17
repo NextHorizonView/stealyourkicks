@@ -1,13 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { db } from "../lib/firebase";
-import { 
-  collection, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  doc 
-} from "firebase/firestore"; 
+import { collection, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore"; 
 import { useAuction } from "../lib/firebase/auction/read";
 
 const initialAuctionState = {
@@ -28,9 +22,8 @@ const initialAuctionState = {
 const AuctionManagement = () => {
   const { data: auctions, error, isLoading } = useAuction();
   const [newAuction, setNewAuction] = useState(initialAuctionState);
-  const [editingAuction, setEditingAuction] = useState(null); // Track editing state
+  const [editingAuction, setEditingAuction] = useState(null);
 
-  // Handle adding a new auction
   const handleAddAuction = async () => {
     try {
       await addDoc(collection(db, "Auctions"), {
@@ -54,7 +47,6 @@ const AuctionManagement = () => {
     }
   };
 
-  // Handle editing an auction
   const handleEditAuction = (auction) => {
     setEditingAuction(auction);
     setNewAuction({
@@ -62,8 +54,8 @@ const AuctionManagement = () => {
       ProductImage: auction.ProductDetails.ProductImage,
       ProductPrize: auction.ProductDetails.ProductPrize,
       ProductTotalStock: auction.ProductDetails.ProductTotalStock,
-      StartTime: auction.AuctionDetails.StartTime, // Populate StartTime
-      EndTime: auction.AuctionDetails.EndTime,     // Populate EndTime
+      StartTime: auction.AuctionDetails.StartTime,
+      EndTime: auction.AuctionDetails.EndTime,
       CurrentHighestBid: auction.AuctionDetails.CurrentHighestBid,
       BidHistory: auction.AuctionDetails.BidHistory,
       Winner: auction.AuctionDetails.Winner,
@@ -95,7 +87,6 @@ const AuctionManagement = () => {
     }
   };
 
-  // Handle selecting the highest bidder as the winner
   const handleConfirmWinner = async (auction) => {
     const highestBidder = getHighestBidder(auction.AuctionDetails.BidHistory);
     if (!highestBidder) return alert("No bids available to select a winner!");
@@ -110,7 +101,6 @@ const AuctionManagement = () => {
     }
   };
 
-  // Helper function to get the highest bidder from the BidHistory
   const getHighestBidder = (bidHistory) => {
     if (!bidHistory || bidHistory.length === 0) return null;
 
@@ -118,10 +108,9 @@ const AuctionManagement = () => {
       bid.BidAmount > max.BidAmount ? bid : max
     );
 
-    return highestBid; // { BidderID: 'Odur...', BidAmount: 110000 }
+    return highestBid;
   };
 
-  // Handle deleting an auction
   const handleDeleteAuction = async (auctionId) => {
     try {
       await deleteDoc(doc(db, "Auctions", auctionId));
@@ -134,7 +123,7 @@ const AuctionManagement = () => {
   if (error) return <p>Error loading auctions: {error}</p>;
 
   return (
-    <div className="p-6">
+    <div className="p-4 sm:p-6">
       <h2 className="text-2xl font-bold mb-4">Auction Management</h2>
 
       {/* Add or Edit Auction */}
@@ -199,7 +188,7 @@ const AuctionManagement = () => {
           />
           <button
             onClick={editingAuction ? handleUpdateAuction : handleAddAuction}
-            className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+            className="bg-blue-500 text-white px-4 py-2 rounded mt-2 w-full sm:w-auto"
           >
             {editingAuction ? "Update Auction" : "Add Auction"}
           </button>
@@ -239,19 +228,19 @@ const AuctionManagement = () => {
               <div className="mt-4">
                 <button
                   onClick={() => handleConfirmWinner(auction)}
-                  className="bg-green-500 text-white px-4 py-2 rounded"
+                  className="bg-green-500 text-white px-4 py-2 rounded w-full sm:w-auto"
                 >
                   Confirm Winner
                 </button>
                 <button
                   onClick={() => handleEditAuction(auction)}
-                  className="bg-yellow-500 text-white px-4 py-2 rounded ml-2"
+                  className="bg-yellow-500 text-white px-4 py-2 rounded ml-0 sm:ml-2 mt-2 sm:mt-0 w-full sm:w-auto"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDeleteAuction(auction.id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded ml-2"
+                  className="bg-red-500 text-white px-4 py-2 rounded ml-0 sm:ml-2 mt-2 sm:mt-0 w-full sm:w-auto"
                 >
                   Delete
                 </button>

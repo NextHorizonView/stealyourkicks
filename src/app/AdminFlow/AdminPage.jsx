@@ -1,13 +1,11 @@
+// pages/AdminPage.js
 "use client";
 import React, { useEffect, useState } from 'react';
 import { SidebarComp } from '../components/header/SideBar';
 import withAdminAuth from '../lib/contexts/AdminAuth';
-import { Bar } from 'react-chartjs-2'; // Import Bar chart
-import { Chart, registerables } from 'chart.js';
 import { db } from '../lib/firebase';
 import { collection, getCountFromServer } from 'firebase/firestore';
-
-Chart.register(...registerables); // Register necessary components
+import ChartComponent from '../components/admin/Chart';
 
 const AdminPage = () => {
   const [data, setData] = useState({
@@ -40,41 +38,13 @@ const AdminPage = () => {
     fetchData();
   }, []);
 
-  const chartData = {
-    labels: ['Total Orders', 'Total Users', 'Total Products', 'Total Auctions'],
-    datasets: [
-      {
-        label: 'Totals',
-        data: [
-          data.totalOrders,
-          data.totalUsers,
-          data.totalProducts,
-          data.totalAuctions,
-        ],
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-  };
-
   return (
     <div className="flex">
       <SidebarComp />
       <div className="flex-1 p-6">
         <h2 className="text-2xl font-bold mb-4">Admin Dashboard</h2>
-        <div className="bg-white p-4 rounded shadow">
-          <Bar data={chartData} options={options} />
-        </div>
+        {/* Render the ChartComponent */}
+        <ChartComponent data={data} />
       </div>
     </div>
   );

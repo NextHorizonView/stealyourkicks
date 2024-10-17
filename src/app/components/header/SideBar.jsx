@@ -16,6 +16,7 @@ import ProductManagement from "@/app/AdminFlow/ProductManagement";
 import UserManagement from "@/app/AdminFlow/UserManagement";
 import AuctionManagement from "@/app/AdminFlow/AuctionManagement";
 import OrderManagement from "@/app/AdminFlow/OrderMangement";
+import ChartComponent from "../admin/Chart";
 
 // Product management component
 // const ProductsSection = () => {
@@ -71,6 +72,14 @@ export function SidebarComp() {
             ),
             section: "auction",  // Add a section key
         },
+        {
+            label: "Dashboard",
+            href: "#",
+            icon: (
+                <RiAuctionFill className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+            ),
+            section: "dashboard",  // Add a section key
+        },
     ];
 
     const [open, setOpen] = useState(false);
@@ -89,6 +98,8 @@ export function SidebarComp() {
                 return <div className="p-6">Coupons Section</div>;
             case "auction":
                 return <AuctionManagement/>
+            case "dashboard":
+                return <ChartComponent/>
             default:
                 return <Dashboard />;  // Default content for dashboard
         }
