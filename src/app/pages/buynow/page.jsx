@@ -4,7 +4,7 @@ import BuyNow from '@/app/BuyingFlow/BuyNow'
 import { useSearchParams } from 'next/navigation'
 import React from 'react'
 
-const page = () => {
+const Page = () => {
   const searchParams = useSearchParams()
   const id = searchParams.get('id')
   const size = searchParams.get('size')
@@ -17,4 +17,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
