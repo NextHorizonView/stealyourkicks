@@ -7,8 +7,10 @@ const nextConfig = {
             "images.unsplash.com",
             "encrypted-tbn1.gstatic.com",
             "image.goat.com",
-            'static.nike.com'
+            'static.nike.com',
+            "assets.adidas.com"
         ],
+        
     },
 };
 

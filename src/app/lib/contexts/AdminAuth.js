@@ -36,7 +36,7 @@ const withAdminAuth = (Component) => {
     useEffect(() => {
       if (!isLoading) {
         if (!user) {
-          router.push('/login'); // Redirect to login if no user is logged in
+          router.push('/pages/login'); // Redirect to login if no user is logged in
         } else if (isAdmin === false) {
           router.push('/'); // Redirect to home if not an admin
         }
