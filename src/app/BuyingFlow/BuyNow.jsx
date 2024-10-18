@@ -82,7 +82,7 @@ const BuyNow = ({ shoeid, size }) => {
             ProductName: product.ProductName,
             ProductPrize: product.ProductPrize,
             ProductSize: selectedSizeData.SizeName, // Using the size name directly from selectedSizeData
-            AddressId: selectedAddress,
+            AddressId: data,
             OrderTime: Timestamp.now(),
             OrderUserId: user.uid,
             OrderStatus: 'Pending', // Set the initial status

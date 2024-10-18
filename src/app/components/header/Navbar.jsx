@@ -5,18 +5,35 @@ import Link from "next/link";
 import { CgProfile } from "react-icons/cg";
 import { BsCartFill } from "react-icons/bs"; // Cart icon
 import { useAuth } from "@/app/lib/contexts/AuthContext";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/app/lib/firebase";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const { user, isLoading, handleLogout } = useAuth();
-
+    const [isAdmin, setIsAdmin] = useState(null);
     const profileRef = useRef(null);
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
-
+    const checkAdminStatus = async () => {
+        if (user) {
+          const adminDocRef = doc(db, 'Admins', user.uid); // Reference to the Admins collection
+          const adminDoc = await getDoc(adminDocRef);
+  
+          if (adminDoc.exists()) {
+            setIsAdmin(true); // User is admin
+          } else {
+            setIsAdmin(false); // User is not admin
+          }
+        }
+      };
+    useEffect(()=>
+    {
+        checkAdminStatus();
+    },[user,isLoading]);
     const toggleProfileMenu = () => {
         setIsProfileOpen(!isProfileOpen);
     };
@@ -55,10 +72,10 @@ const Navbar = () => {
                     {/* Menu Items */}
                     <div className="hidden sm:flex sm:ml-auto space-x-4">
                         <Link href="/" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Home</Link>
-                        <Link href="pages/about" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">About</Link>
-                        <Link href="/services" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Services</Link>
-                        <Link href="pages/contact" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Contact</Link>
-                        <Link href="pages/auction" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Auction</Link>
+                        <Link href="/pages/about" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">About</Link>
+                        <Link href="/pages/services" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Services</Link>
+                        <Link href="/pages/contact" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Contact</Link>
+                        <Link href="/pages/auction" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Auction</Link>
                     </div>
 
                     {/* Icons Section */}
@@ -87,6 +104,7 @@ const Navbar = () => {
                                         <Link href="/pages/register" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
                                             Register
                                         </Link>
+                                        
                                     </>
                                 ) : (
                                     <>
@@ -98,12 +116,16 @@ const Navbar = () => {
                                             Logout
                                            </button>
                                         </Link>
+                                        {isAdmin && 
+                                            <Link href="/pages/admin" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">Admin Dashboard</Link>
+                                            }
                                     </>
                                 )}
+                                 
                                 {/* Admin Login */}
-                                <Link href="/pages/adminlogin" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
+                                {/* <Link href="/pages/adminlogin" className="block px-4 py-2 text-sm text-black hover:bg-indigo-500 hover:text-white transition duration-300">
                                     Admin Login
-                                </Link>
+                                </Link> */}
                             </div>
                         )}
                     </div>
@@ -133,9 +155,13 @@ const Navbar = () => {
             <div className={`${isOpen ? "block" : "hidden"} sm:hidden`} id="mobile-menu">
                 <div className="px-2 pt-2 pb-3 space-y-1">
                     <Link href="/" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Home</Link>
-                    <Link href="/about" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">About</Link>
-                    <Link href="/services" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Services</Link>
-                    <Link href="/contact" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Contact</Link>
+                    <Link href="/pages/about" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">About</Link>
+                    <Link href="/pages/services" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Services</Link>
+                    <Link href="/pages/contact" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Contact</Link>
+                    {isAdmin && 
+                    <Link href="/pages/admin" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Contact</Link>
+                    
+                    }
                 </div>
             </div>
         </nav>

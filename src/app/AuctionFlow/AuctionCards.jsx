@@ -106,6 +106,7 @@ export function AuctionCard() {
             setSelectedAuctionId(null); // Reset auction selection
         } catch (error) {
             console.error("Error placing bid:", error);
+
             alert("Failed to place bid.");
         }
     };

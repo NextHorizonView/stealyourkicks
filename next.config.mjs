@@ -8,7 +8,8 @@ const nextConfig = {
             "encrypted-tbn1.gstatic.com",
             "image.goat.com",
             'static.nike.com',
-            "assets.adidas.com"
+            "assets.adidas.com",
+            "sothebys-md.brightspotcdn.com"
         ],
         
     },

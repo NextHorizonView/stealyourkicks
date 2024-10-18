@@ -14,6 +14,7 @@ const withAdminAuth = (Component) => {
     const router = useRouter();
     const [isAdmin, setIsAdmin] = useState(null); // To track admin status
 
+   
     useEffect(() => {
       const checkAdminStatus = async () => {
         if (user) {
