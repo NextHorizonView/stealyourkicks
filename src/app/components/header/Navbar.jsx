@@ -73,9 +73,10 @@ const Navbar = () => {
                     <div className="hidden sm:flex sm:ml-auto space-x-4">
                         <Link href="/" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Home</Link>
                         <Link href="/pages/about" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">About</Link>
-                        <Link href="/pages/services" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Services</Link>
+                        {/* <Link href="/pages/services" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Services</Link> */}
                         <Link href="/pages/contact" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Contact</Link>
                         <Link href="/pages/auction" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Auction</Link>
+                        <Link href="/pages/sell" className="text-black hover:text-indigo-500 relative px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Sell</Link>
                     </div>
 
                     {/* Icons Section */}
@@ -156,8 +157,9 @@ const Navbar = () => {
                 <div className="px-2 pt-2 pb-3 space-y-1">
                     <Link href="/" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Home</Link>
                     <Link href="/pages/about" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">About</Link>
-                    <Link href="/pages/services" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Services</Link>
+                    {/* <Link href="/pages/services" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Services</Link> */}
                     <Link href="/pages/contact" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Contact</Link>
+                    <Link href="/pages/sell" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Sell</Link>
                     {isAdmin && 
                     <Link href="/pages/admin" className="text-black hover:text-indigo-500 block px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Contact</Link>
                     

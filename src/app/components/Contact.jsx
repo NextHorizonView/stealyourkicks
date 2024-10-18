@@ -49,8 +49,8 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="flex items-center justify-center">
-      <div className="contact-form bg-white max-w-sm p-6 rounded shadow">
+    <div className="flex items-center justify-center min-w-screen">
+      <div className="contact-form bg-white max-w-lg w-full p-6 rounded shadow">
         <h2 className="text-2xl font-bold mb-4">Contact Us</h2>
         {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
         <form onSubmit={handleSubmit}>
@@ -90,7 +90,7 @@ const ContactForm = () => {
             {formErrors.message && <p className="text-red-500 text-xs mt-1">{formErrors.message}</p>}
           </div>
 
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300">
             Submit
           </button>
         </form>

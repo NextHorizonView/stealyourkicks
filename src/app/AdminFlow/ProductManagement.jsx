@@ -8,13 +8,14 @@ const ProductManagement = () => {
     const { data, error, isLoading } = useProducts();
     const [editingProduct, setEditingProduct] = useState(null);
     const [newProduct, setNewProduct] = useState({
-        ProductId: "", // Adding ProductId
+        ProductId: "", 
         ProductName: "",
         ProductImage: "",
         ProductPrize: "",
         ProductIsCoupon: false,
-        ProductSize: [{ SizeName: "", SizeStock: "" }], // Sizes and stock array
-        ProductTotalStock: "0", // Total stock calculation
+        ProductIsExclusive: false, // Added exclusive field
+        ProductSize: [{ SizeName: "", SizeStock: "" }], 
+        ProductTotalStock: "0",
     });
 
     if (isLoading) {
@@ -30,25 +31,22 @@ const ProductManagement = () => {
     const handleEditProduct = (product) => {
         setEditingProduct({
             ...product,
-            ProductSize: product.ProductSize || [], // Ensure it's an array
+            ProductSize: product.ProductSize || [],
         });
     };
 
     const handleSaveProduct = async () => {
-        console.log("Save CLciked");
-        
+        console.log("Save Clicked");
         if (editingProduct && editingProduct.ProductId) {
             try {
-                // Calculate total stock before saving
                 const totalStock = editingProduct.ProductSize.reduce(
                     (sum, size) => sum + Number(size.SizeStock),
                     0
                 );
                 await updateProduct({
                     ...editingProduct,
-                    // ProductTotalStock: totalStock.toString(),
-                }); // Update product in Firestore
-                setEditingProduct(null); // Exit edit mCommandode
+                });
+                setEditingProduct(null); // Exit edit mode
             } catch (error) {
                 console.error("Error saving product:", error);
             }
@@ -61,19 +59,19 @@ const ProductManagement = () => {
                 (sum, size) => sum + Number(size.SizeStock),
                 0
             );
-            console.log("New Product",newProduct);
-            
+            console.log("New Product", newProduct);
             await addProduct({
                 ...newProduct,
                 ProductTotalStock: totalStock.toString(),
-            }); // Add product to Firestore
+            });
             setNewProduct({
                 ProductId: "",
                 ProductName: "",
                 ProductImage: "",
                 ProductPrize: "",
                 ProductIsCoupon: false,
-                ProductSize: [{ SizeName: "", SizeStock: "" }], // Reset form
+                ProductIsExclusive: false, // Reset exclusive field
+                ProductSize: [{ SizeName: "", SizeStock: "" }],
                 ProductTotalStock: "0",
             });
         } catch (error) {
@@ -124,6 +122,11 @@ const ProductManagement = () => {
                                     <p className="text-gray-600 dark:text-gray-300">No sizes available</p>
                                 )}
                             </div>
+
+                            {/* Display if product is exclusive */}
+                            <p className="text-gray-600 dark:text-gray-300">
+                                Exclusive: {product.ProductIsExclusive ? "Yes" : "No"}
+                            </p>
 
                             {/* Display if product has coupons */}
                             <p className="text-gray-600 dark:text-gray-300">
@@ -194,17 +197,16 @@ const ProductManagement = () => {
                             </div>
                         ))}
 
-                                    {/* Add New Size During Editing */}
-                                    <button
-                                        onClick={() => {
-                                            const updatedSizes = [...editingProduct.ProductSize, { SizeName: "", SizeStock: "" }];
-                                
-                                            setEditingProduct({ ...editingProduct, ProductSize: updatedSizes });
-                                        }}
-                                        className="bg-gray-500 text-white px-4 py-2 rounded mt-2"
-                                    >
-                                        Add Size
-                                    </button>
+                        {/* Add New Size During Editing */}
+                        <button
+                            onClick={() => {
+                                const updatedSizes = [...editingProduct.ProductSize, { SizeName: "", SizeStock: "" }];
+                                setEditingProduct({ ...editingProduct, ProductSize: updatedSizes });
+                            }}
+                            className="bg-gray-500 text-white px-4 py-2 rounded mt-2"
+                        >
+                            Add Size
+                        </button>
 
                         {/* Coupons Checkbox for Edit */}
                         <label className="mt-2">
@@ -214,6 +216,16 @@ const ProductManagement = () => {
                                 onChange={(e) => setEditingProduct({ ...editingProduct, ProductIsCoupon: e.target.checked })}
                             />
                             {" "}Product Coupons
+                        </label>
+
+                        {/* Exclusive Checkbox for Edit */}
+                        <label className="mt-2">
+                            <input
+                                type="checkbox"
+                                checked={editingProduct.ProductIsExclusive}
+                                onChange={(e) => setEditingProduct({ ...editingProduct, ProductIsExclusive: e.target.checked })}
+                            />
+                            {" "}Exclusive
                         </label>
 
                         <button
@@ -289,9 +301,19 @@ const ProductManagement = () => {
                         {" "}Product Coupons
                     </label>
 
+                    {/* Exclusive Checkbox for Add New Product */}
+                    <label className="mt-2">
+                        <input
+                            type="checkbox"
+                            checked={newProduct.ProductIsExclusive}
+                            onChange={(e) => setNewProduct({ ...newProduct, ProductIsExclusive: e.target.checked })}
+                        />
+                        {" "}Exclusive
+                    </label>
+
                     <button
                         onClick={handleAddProduct}
-                        className="bg-green-500 text-white SHOpx-4 py-2 rounded mt-2"
+                        className="bg-green-500 text-white px-4 py-2 rounded mt-2"
                     >
                         Add Product
                     </button>
