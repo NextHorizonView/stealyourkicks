@@ -9,7 +9,8 @@ const nextConfig = {
             "image.goat.com",
             'static.nike.com',
             "assets.adidas.com",
-            "sothebys-md.brightspotcdn.com"
+            "sothebys-md.brightspotcdn.com",
+            "firebasestorage.googleapis.com"
         ],
         
     },

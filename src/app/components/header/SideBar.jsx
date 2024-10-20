@@ -13,12 +13,13 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import ProductManagement from "@/app/AdminFlow/ProductManagement";
-import UserManagement from "@/app/AdminFlow/UserManagement";
+import UserManagement from "@/app/AdminFlow/ReselProductManagement";
 import AuctionManagement from "@/app/AdminFlow/AuctionManagement";
 import OrderManagement from "@/app/AdminFlow/OrderMangement";
 import ChartComponent from "../admin/Chart";
 import { collection, getCountFromServer } from "firebase/firestore";
 import { db } from "@/app/lib/firebase";
+import ReselProductManagement from "@/app/AdminFlow/ReselProductManagement";
 
 // Product management component
 // const ProductsSection = () => {
@@ -57,7 +58,7 @@ export function SidebarComp() {
             section: "orders",  // Add a section key
         },
         {
-            label: "User Management",
+            label: "Reselling Management",
             href: "#",
             icon: (
                 <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
@@ -123,7 +124,7 @@ export function SidebarComp() {
             case "orders":
                 return <OrderManagement/>
             case "userManagement":
-                return <UserManagement/> 
+                return <ReselProductManagement />
             case "coupons":
                 return <div className="p-6">Coupons Section</div>;
             case "auction":
