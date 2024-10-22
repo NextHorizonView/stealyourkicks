@@ -16,6 +16,7 @@ export function useProducts() {
           ProductId: doc.data().ProductId,
           ProductImage: doc.data().ProductImage,
           ProductIsCoupon: doc.data().ProductIsCoupon,
+          isExclusive:doc.data().isExclusive,
           ProductName: doc.data().ProductName,
           ProductPrize: doc.data().ProductPrize,
           ProductSize: doc.data().ProductSize,

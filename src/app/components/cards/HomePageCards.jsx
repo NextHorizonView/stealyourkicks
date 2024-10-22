@@ -74,7 +74,6 @@ export function HomePageCards() {
                                 alt={shoe.ProductName}
                             />
                         </CardItem>
-
                         {/* Price and Action Buttons */}
                         <div className="flex items-center justify-between mt-4">
                             {/* Buy Now Button */}

@@ -13,7 +13,7 @@ const ProductManagement = () => {
         ProductImage: "",
         ProductPrize: "",
         ProductIsCoupon: false,
-        ProductIsExclusive: false, // Added exclusive field
+        isExclusive: false, // Added exclusive field
         ProductSize: [{ SizeName: "", SizeStock: "" }], 
         ProductTotalStock: "0",
     });
@@ -125,7 +125,7 @@ const ProductManagement = () => {
 
                             {/* Display if product is exclusive */}
                             <p className="text-gray-600 dark:text-gray-300">
-                                Exclusive: {product.ProductIsExclusive ? "Yes" : "No"}
+                                Exclusive: {product.isExclusive ? "Yes" : "No"}
                             </p>
 
                             {/* Display if product has coupons */}
@@ -169,7 +169,7 @@ const ProductManagement = () => {
                         />
 
                         {/* Editing Sizes and Stock */}
-                        <h4 className="text-lg font-semibold mt-4">Edit Sizes and Stock</h4>
+                        <h4 className="text-lg font-semibold mt-4">Edit Sizeas and Stock</h4>
                         {(editingProduct.ProductSize || []).map((sizeObj, index) => (
                             <div key={index} className="flex gap-2 mb-2">
                                 <input
@@ -222,8 +222,8 @@ const ProductManagement = () => {
                         <label className="mt-2">
                             <input
                                 type="checkbox"
-                                checked={editingProduct.ProductIsExclusive}
-                                onChange={(e) => setEditingProduct({ ...editingProduct, ProductIsExclusive: e.target.checked })}
+                                checked={editingProduct.isExclusive}
+                                onChange={(e) => setEditingProduct({ ...editingProduct, isExclusive: e.target.checked })}
                             />
                             {" "}Exclusive
                         </label>
@@ -305,7 +305,7 @@ const ProductManagement = () => {
                     <label className="mt-2">
                         <input
                             type="checkbox"
-                            checked={newProduct.ProductIsExclusive}
+                            checked={newProduct.isExclusive}
                             onChange={(e) => setNewProduct({ ...newProduct, ProductIsExclusive: e.target.checked })}
                         />
                         {" "}Exclusive

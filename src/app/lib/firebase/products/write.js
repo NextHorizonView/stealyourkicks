@@ -57,7 +57,8 @@ export const updateProduct = async (product) => {
             ProductPrize: product.ProductPrize,
             ProductTotalStock: product.ProductTotalStock,
             ProductSize: validatedSizes,
-            ProductIsCoupon: product.ProductIsCoupon
+            ProductIsCoupon: product.ProductIsCoupon,
+            isExclusive : product.isExclusive
         });
     } catch (error) {
         console.error("Error updating product:", error.message);
