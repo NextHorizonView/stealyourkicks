@@ -31,13 +31,9 @@ export function useProducts() {
         next(error?.message || "Error fetching products");
       }
     );
-    
     return () => unsub();
   });
-
-  console.log('Data:', data);  // Check if data is being returned
-//   console.log('Error:', error);  // Check if there's any error
-
+  console.log('Data:', data);
   return {
     data,
     error,

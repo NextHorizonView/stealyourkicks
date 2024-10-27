@@ -15,7 +15,6 @@ const Profile = ({ uid }) => {
       console.error('UID is missing!');
       return;
     }
-  
     const fetchProfile = async () => {
       try {
         const docRef = doc(db, 'Users', user.uid);
@@ -110,9 +109,7 @@ const Profile = ({ uid }) => {
           </div>
         </div>
       </div>
-
       {/* Shipping Details Section */}
-    
       {/* Addresses Section */}
       <div className="mb-8">
         <h3 className="text-xl font-semibold mb-4 text-gray-700">Addresses</h3>

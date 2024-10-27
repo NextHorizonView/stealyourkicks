@@ -96,18 +96,14 @@ const BuyNow = ({ shoeid, size }) => {
             // Update the product stock
             const newStock = selectedSizeData.SizeStock - 1; // Decrement stock
             await updateProductStock(product.ProductId, selectedSizeData.SizeName, newStock); // Pass size name and new stock
-    
+            
             // Redirect to confirmation page
-            router.push(`/pages/confirmation?id=${product.ProductId}&size=${selectedSizeData.SizeName}`);
+            router.push(`/pages/feedback`);
         } catch (error) {
             console.error("Error processing the order:", error);
             alert('There was an error processing your order. Please try again later.');
         }
     };
-    
-    
-    
-    
     return (
         <>
             <Navbar />
