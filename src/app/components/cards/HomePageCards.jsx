@@ -72,16 +72,16 @@ export function HomePageCards() {
                                         </span>
                                     </BackgroundGradient>
                                 )}
-                                {shoe.isResell && (
+                                {shoe.isResel && (
                                     <span className="flex items-center bg-green-500 text-white px-3 py-1 text-sm font-semibold rounded-full h-8">
                                         <AiFillTag className="mr-2" /> Resell
                                     </span>
                                 )}
-                                {shoe.isRefurbished && ( // New Refurbished Tag
+                                {/* {shoe.isRefurbished && ( // New Refurbished Tag
                                     <span className="flex items-center bg-blue-500 text-white px-3 py-1 text-sm font-semibold rounded-full h-8">
                                         <AiFillTag className="mr-2" /> Refurbished
                                     </span>
-                                )}
+                                )} */}
                             </div>
 
                             {/* Shoe Name and Description */}

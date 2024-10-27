@@ -13,7 +13,8 @@ const ProductManagement = () => {
         ProductImage: "",
         ProductPrize: "",
         ProductIsCoupon: false,
-        isExclusive: false, // Added exclusive field
+        isExclusive: false,
+        isResel: false, // Added exclusive field
         ProductSize: [{ SizeName: "", SizeStock: "" }], 
         ProductTotalStock: "0",
     });
@@ -29,10 +30,15 @@ const ProductManagement = () => {
     const products = data || [];
 
     const handleEditProduct = (product) => {
+        console.log("Edititng clicked ",editingProduct);
+        // console.log("New clicked ",newProduct);
+        
         setEditingProduct({
             ...product,
             ProductSize: product.ProductSize || [],
         });
+        console.log("New clicked ",editingProduct);
+
     };
 
     const handleSaveProduct = async () => {
@@ -70,7 +76,9 @@ const ProductManagement = () => {
                 ProductImage: "",
                 ProductPrize: "",
                 ProductIsCoupon: false,
-                ProductIsExclusive: false, // Reset exclusive field
+                ProductIsExclusive: false, 
+                isResel: false, // Reset exclusive field
+                // Reset exclusive field
                 ProductSize: [{ SizeName: "", SizeStock: "" }],
                 ProductTotalStock: "0",
             });
@@ -127,11 +135,13 @@ const ProductManagement = () => {
                             <p className="text-gray-600 dark:text-gray-300">
                                 Exclusive: {product.isExclusive ? "Yes" : "No"}
                             </p>
-
-                            {/* Display if product has coupons */}
                             <p className="text-gray-600 dark:text-gray-300">
-                                Coupons Available: {product.ProductIsCoupon ? "Yes" : "No"}
+                                Resell: {product.isResel ? "Yes" : "No"}
                             </p>
+                            {/* Display if product has coupons */}
+                            {/* <p className="text-gray-600 dark:text-gray-300">
+                                Coupons Available: {product.ProductIsCoupon ? "Yes" : "No"}
+                            </p> */}
 
                             <button
                                 onClick={() => handleEditProduct(product)}
@@ -227,7 +237,14 @@ const ProductManagement = () => {
                             />
                             {" "}Exclusive
                         </label>
-
+                        <label className="mt-2">
+                        <input
+                            type="checkbox"
+                            checked={editingProduct.isResel}
+                            onChange={(e) => setEditingProduct({ ...editingProduct, isResel: e.target.checked })}
+                        />
+                        {" "}Resel Product
+                    </label>
                         <button
                             onClick={handleSaveProduct}
                             className="bg-green-500 text-white px-4 py-2 rounded mt-2"
@@ -310,7 +327,14 @@ const ProductManagement = () => {
                         />
                         {" "}Exclusive
                     </label>
-
+                    <label className="mt-2">
+                        <input
+                            type="checkbox"
+                            checked={newProduct.isResel}
+                            onChange={(e) => setNewProduct({ ...newProduct, isResel: e.target.checked })}
+                        />
+                        {" "}Resell Product
+                    </label>
                     <button
                         onClick={handleAddProduct}
                         className="bg-green-500 text-white px-4 py-2 rounded mt-2"

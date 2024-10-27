@@ -21,7 +21,9 @@ export const addProduct = async (product) => {
             ProductPrize: product.ProductPrize,
             ProductTotalStock: product.ProductTotalStock, 
             ProductSize: validatedSizes,
-            ProductIsCoupon: product.ProductIsCoupon
+            ProductIsCoupon: product.ProductIsCoupon,
+            isExclusive: product.isExclusive,
+            isResel: product.isResel,
         });
 
         // Update the document with the ProductId (document ID)
@@ -58,7 +60,8 @@ export const updateProduct = async (product) => {
             ProductTotalStock: product.ProductTotalStock,
             ProductSize: validatedSizes,
             ProductIsCoupon: product.ProductIsCoupon,
-            isExclusive : product.isExclusive
+            isExclusive: product.isExclusive,
+            isResel: product.isResel,
         });
     } catch (error) {
         console.error("Error updating product:", error.message);
