@@ -227,7 +227,6 @@ const ProductManagement = () => {
                             />
                             {" "}Product Coupons
                         </label>
-
                         {/* Exclusive Checkbox for Edit */}
                         <label className="mt-2">
                             <input
