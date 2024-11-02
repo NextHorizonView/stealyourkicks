@@ -1,7 +1,5 @@
-// lib/firebase/cart/read.js
-"use client";
-import { db } from '../../firebase'; // Adjust import based on your file structure
-import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '../../firebase';
+import { doc, onSnapshot, updateDoc, arrayRemove } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -9,40 +7,53 @@ export function useCart() {
     const [cartItems, setCartItems] = useState([]);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const {user} = useAuth();
+    const { user } = useAuth();
+
     useEffect(() => {
         if (!user.uid) return;
 
-        const cartRef = doc(db, 'Carts', user.uid); // Reference to the user's cart document
+        const cartRef = doc(db, 'Carts', user.uid);
 
         const unsubscribe = onSnapshot(
             cartRef,
             (doc) => {
                 if (doc.exists()) {
                     const data = doc.data();
-                    console.log('Fetched cart:', data); // Log fetched cart data
-                    setCartItems(data.items || []); // Set items to state (fallback to empty array)
+                    console.log('Fetched cart:', data);
+                    setCartItems(data.items || []);
                 } else {
                     console.log('No such cart!');
-                    setCartItems([]); // Set to empty if cart does not exist
+                    setCartItems([]);
                 }
-                setIsLoading(false); // Stop loading after fetching data
+                setIsLoading(false);
             },
             (error) => {
                 console.error('Error fetching cart:', error);
                 setError(error);
-                setIsLoading(false); // Stop loading on error
+                setIsLoading(false);
             }
         );
 
-        return () => unsubscribe(); // Cleanup on unmount
+        return () => unsubscribe();
     }, [user.uid]);
+
     const removeFromCart = async (productId) => {
         try {
-            const cartRef = doc(db, 'Carts', userId);
+            const cartRef = doc(db, 'Carts', user.uid);
+
+            // Find the exact item object that matches the ProductId
+            const itemToRemove = cartItems.find((item) => item.ProductId === productId);
+
+            if (!itemToRemove) {
+                console.error('Item not found in cart:', productId);
+                return;
+            }
+
+            // Use the entire item object in arrayRemove
             await updateDoc(cartRef, {
-                items: arrayRemove({ ProductId: productId }) // Ensure to match the structure of the item
+                items: arrayRemove(itemToRemove)
             });
+
             console.log('Item removed from cart:', productId);
         } catch (error) {
             console.error('Error removing item from cart:', error);

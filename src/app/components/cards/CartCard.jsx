@@ -44,7 +44,7 @@ export function CartCard({ userId }) { // Accept userId as a prop
                                 ))}
                             </div>
                             <button
-                                onClick={() => removeFromCart(item.ProductId)}  // Use the correct property for the ID
+                                onClick={() => removeFromCart(item.ProductId,userId)}  // Use the correct property for the ID
                                 className="mt-4 px-6 py-2 rounded-full bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-colors shadow-md"
                             >
                                 Remove from Cart
