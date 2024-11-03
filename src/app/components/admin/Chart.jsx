@@ -5,9 +5,9 @@ import { Chart, registerables } from 'chart.js';
 // Register all required components including scales
 Chart.register(...registerables);
 
-const ChartComponent = ({ data = { totalOrders: 0, totalUsers: 0, totalProducts: 0, totalAuctions: 0 } }) => {
+const ChartComponent = ({ data = { totalOrders: 0, totalUsers: 0, totalProducts: 0, totalAuctions: 0,totalFeedback: 0 } }) => {
   const chartData = {
-    labels: ['Total Orders', 'Total Users', 'Total Products', 'Total Auctions'],
+    labels: ['Total Orders', 'Total Users', 'Total Products', 'Total Auctions', 'Total Feedback'],
     datasets: [
       {
         label: 'Totals',
@@ -16,6 +16,7 @@ const ChartComponent = ({ data = { totalOrders: 0, totalUsers: 0, totalProducts:
           data.totalUsers,
           data.totalProducts,
           data.totalAuctions,
+          data.totalFeedback,
         ],
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderColor: 'rgba(75, 192, 192, 1)',

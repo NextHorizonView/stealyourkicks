@@ -20,6 +20,7 @@ import ChartComponent from "../admin/Chart";
 import { collection, getCountFromServer } from "firebase/firestore";
 import { db } from "@/app/lib/firebase";
 import ReselProductManagement from "@/app/AdminFlow/ReselProductManagement";
+import FeedbackList from "../feedback/Feedback";
 
 // Product management component
 // const ProductsSection = () => {
@@ -38,6 +39,7 @@ export function SidebarComp() {
         totalUsers: 0,
         totalProducts: 0,
         totalAuctions: 0,
+        totalFeedback: 0
       });
     // Links for the sidebar
     const links = [
@@ -66,7 +68,7 @@ export function SidebarComp() {
             section: "userManagement",  // Add a section key
         },
         {
-            label: "Coupons",
+            label: "Feedback",
             href: "#",
             icon: (
                 <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
@@ -98,12 +100,14 @@ export function SidebarComp() {
             const usersCount = await getCountFromServer(collection(db, 'Users'));
             const productsCount = await getCountFromServer(collection(db, 'Products'));
             const auctionsCount = await getCountFromServer(collection(db, 'Auctions'));
-    
+            const feedbackCout = await getCountFromServer(collection(db, 'Feedback'));
+            
             setData({
               totalOrders: ordersCount.data().count,
               totalUsers: usersCount.data().count,
               totalProducts: productsCount.data().count,
               totalAuctions: auctionsCount.data().count,
+              totalFeedback: feedbackCout.data().count,
             });
           } catch (error) {
             console.error("Error fetching totals:", error);
@@ -126,7 +130,7 @@ export function SidebarComp() {
             case "userManagement":
                 return <ReselProductManagement />
             case "coupons":
-                return <div className="p-6">Coupons Section</div>;
+                return <FeedbackList/>
             case "auction":
                 return <AuctionManagement/>
             case "dashboard":
