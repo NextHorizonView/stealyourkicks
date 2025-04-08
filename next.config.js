@@ -9,5 +9,5 @@ const nextConfig = {
     trailingSlash: true, // optional but helps avoid 404s on GitHub Pages
   };
   
-  module.exports = nextConfig;
+  export default nextConfig;
   
