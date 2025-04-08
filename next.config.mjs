@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     // Other Next.js configurations (if any)
-
+    output: 'export',
     images: {
         domains: [
             "images.unsplash.com",
